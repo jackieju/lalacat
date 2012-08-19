@@ -1,0 +1,15 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/cat.js">
+    <Files>
+      <File FileName="Assets/scripts/cat.js" Line="55" Column="9" />
+      <File FileName="Assets/scripts/GameObjectPool.js" Line="138" Column="4" />
+      <File FileName="Assets/scripts/CentralController.js" Line="56" Column="50" />
+      <File FileName="Assets/scripts/DontGoThoughThings.js" Line="30" Column="45" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
