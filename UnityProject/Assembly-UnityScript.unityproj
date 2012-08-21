@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>9.0.21022</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{AB1C6B8A-F6DC-E1FB-F097-74176D75F42A}</ProjectGuid>
+	<ProjectGuid>{137A7369-EC96-0CC2-09B9-FE1D6DE1A3E3}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -44,10 +44,12 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\scripts\Cat.js" />
      <Compile Include="Assets\scripts\CentralController.js" />
      <Compile Include="Assets\scripts\DontGoThoughThings.js" />
+     <Compile Include="Assets\scripts\DrawLine.js" />
      <Compile Include="Assets\scripts\GameObjectPool.js" />
-     <Compile Include="Assets\scripts\cat.js" />
+     <Compile Include="Assets\scripts\test.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
