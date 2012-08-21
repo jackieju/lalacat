@@ -24,11 +24,35 @@ function Update () {
 
 	if (status < 2){
 		var distance = speed * Time.deltaTime;
-		//Debug.Log("distance="+distance+ ", z="+transform.position.z);
-		transform.Translate(Vector3.down*distance);
+		
+		
+		var iy:int = transform.position.y - distance;
+		var ix:int = transform.position.x + 2.5f;
+		Debug.Log("distance="+distance+ ", pos="+transform.position+ ",ix="+ix+", iy="+iy);
+		if (iy <= 0 ){// hit floor
+			iy = 0;
+			mf_x = transform.position.x = ix-2;
+			mf_y = transform.position.y = iy+0.5;
+			status = 2;
+			putIntoMatrix();
+		}else
+		
+		if (Cat.matrix	[ix,iy] != null){ // hit cat
+			mf_x = transform.position.x = ix-2;
+			mf_y = transform.position.y = iy+1.5f;
+			status = 2;
+			putIntoMatrix();
+		}
+		else{ // free drop
+			transform.Translate(Vector3.down*distance);
 	
+			mf_x = transform.position.x;
+			mf_y = transform.position.y;
+		
+		}
 		if (transform.position	.y	<0){
 			     transform.position = new Vector3( transform.position.x, 0.5, transform.position.z);
+			     putIntoMatrix();
 			     status = 2;
 		}
 		
@@ -106,17 +130,16 @@ function OnTriggerEnter(obj:Collider){
 function putIntoMatrix(){
 	var y:int = transform.position.y;
 	var x:int;
-	if (transform.position.x	>= 0)
-		x = transform.position.x+0.5f;
-	else
-		x = transform.position.x-0.5f;
+
+		x = transform.position.x+2.5f;
+
 	Debug.Log("pos="+transform.position);	
-	x +=2;
+	
 	Debug.Log("matrix["+x+"]["+y+"]="+ this.name);	
 	Cat.matrix[x,y] = this;
 	mi_x = x;
 	mi_y = y;
-	mf_x = x-2;
+	mf_x = x-2.0f;
 	mf_y = y + 0.5f;
 
 	// fix position.y

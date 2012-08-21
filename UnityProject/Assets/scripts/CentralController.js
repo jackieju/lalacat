@@ -50,6 +50,7 @@ function onTimer(){
 
 	while (true){
 		yield WaitForSeconds (interval);
+		
 	}
 }
 // Tells each ball who we are.
@@ -87,7 +88,7 @@ function OnGUI(){
  			if (_c != null){
 	     		var pt:Vector2 = 	mCamera.WorldToScreenPoint(_c.transform.position);
 	     	//	Debug.Log("pt="+pt);
-         		GUI.Label(Rect(pt.x, Screen.height-pt.y-30, 100, 20), _c.name);
+         		GUI.Label(Rect(pt.x, Screen.height-pt.y-30, 100, 20), _c.name+"("+k+","+kk+")");
      		}
  		}
      }
@@ -132,35 +133,76 @@ function OnGUI(){
 			        var touchDeltaPosition:Vector2 = Input.GetTouch(i).deltaPosition;
 			        var tp_w:Vector3 = mCamera.ScreenToWorldPoint(t.position);
 			        var x:int;
-			    if (tp_w.x <0)
-			   	 	x = tp_w.x-0.5f;
-			    else  
-			    	x = tp_w.x+0.5f;
+			 
+			   	 	x = tp_w.x+2.5f;
+			
 				var y:int = tp_w.y;
-				x+=2;
-         //	Debug.Log("touche("+tp_w+") move(x="+x+", y="+y+", moving_cat="+moving_cat);
+	
+         	Debug.Log("touche("+tp_w+") move(x="+x+", y="+y+", moving_cat="+moving_cat);
      
 				
 				if (moving_cat != null){
 				
-					if (Cat.matrix[x,y]  != null){ // position occupied
+					if ((y < 0) || (Cat.matrix[x,y]  != null && Cat.matrix[x,y] != moving_cat)){ // current position occupied
 						// revert to last position
 						  	moving_cat.transform.position = new Vector3(moving_cat.mf_x, moving_cat.mf_y, 0);
 					
 					}else{ 
-				
-			        Debug.Log("Moved "+touchDeltaPosition +", to "+t.position+"("+tp_w+")");
+					
+			        Debug.Log("Moved delta "+touchDeltaPosition +", to "+t.position+"("+tp_w+")");
 			        // Move object across XY plane
 			      //  moving_cat.transform.Translate (touchDeltaPosition.x * drag_cat_speed, touchDeltaPosition.y * drag_cat_speed, 0);
 					
-						if (moving_cat.status != 4)
-							moving_cat.transform.position = new Vector3(tp_w.x, tp_w.y, 0);  
-						else{
-							moving_cat.transform.position = new Vector3(x, y+0.5f, 0);
-							moving_cat.status = 3;
-						}
-						moving_cat.mf_x = x;
-						moving_cat.mf_y = y + 0.5f;
+//						if (moving_cat.status != 4){
+							// check if collide others
+					
+							var fx2:float = tp_w.x;
+							var fy2:float = tp_w.y;
+							
+							var ix2:int = tp_w.x+2.0f+0.5+0.5f;
+							var iy2:int = tp_w.y;
+							
+						
+							
+							if (Cat.matrix[ix2, iy2] != null){
+								Debug.Log("collide right, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x);
+								fx2 = moving_cat.mf_x;
+									fy2 = moving_cat.mf_y;
+							}
+							
+							ix2  = tp_w.x+2.0f+0.5f-0.5f;
+							if (Cat.matrix[ix2, iy2] != null){
+								fx2 = moving_cat.mf_x;
+									fy2 = moving_cat.mf_y;
+							}
+							
+							ix2 = tp_w.x+2.5f;
+							iy2 = tp_w.y +0.5f;
+							if (Cat.matrix[ix2, iy2] != null){
+								fy2 = moving_cat.mf_y;
+								fx2 = moving_cat.mf_x;
+							}
+							
+							iy2 = tp_w.y - 0.5f;
+							if (iy2 < 0 || Cat.matrix[ix2, iy2] != null){
+								fy2 = moving_cat.mf_y;
+								fx2 = moving_cat.mf_x;
+							}
+							
+							//moving_cat.transform.position = new Vector3(tp_w.x, tp_w.y, 0);  
+							moving_cat.mf_x = fx2;
+							moving_cat.mf_y = fy2;
+							moving_cat.transform.position = new Vector3(fx2, fy2, 0);
+							//cat.mf_y = y + 0.5f;
+//						}
+//						else{
+//							var a = x- moving_cat.transform.position.x;
+//							var b = y+0.5 - moving_cat.transform.position.y;
+//							//moving_cat.transform.position = new Vector3(x, y+0.5f, 0);
+//							moving_cat.transform.Translate(new Vector3(a, b, 0));
+//							moving_cat.status = 3;
+//						}
+					
 					}
 					
 				}
@@ -169,7 +211,9 @@ function OnGUI(){
 					
 					}else{
 						if (Cat.matrix[x,y] != null){
+							
 							moving_cat = Cat.matrix[x,y];
+							Debug.Log("moving cat = " + moving_cat.name +", "+x+", "+y);
 							Cat.matrix[x,y] = null;
 							moving_cat.status = 3;
 						}
@@ -185,11 +229,9 @@ function OnGUI(){
         		// put into grid
         		Debug.Log("moving_cat="+moving_cat);
         		var ix:int;
-        		if (moving_cat.transform.position.x >= 0)
-        			ix = moving_cat.transform.position.x+0.5;
-        			else
-        			ix = moving_cat.transform.position.x -0.5;
-        		
+        	
+        			ix = moving_cat.transform.position.x+2.5f;
+        			ix -= 2;
         		//if (moving_cat.transform.position.x - ix > 0.5f)
         			//ix ++;
         			
@@ -212,7 +254,10 @@ function SpawnBall(){
 	var o:GameObject = ballPool.Spawn(spawnPoint, Quaternion.identity);
 	var c:Cat = o.GetComponent("Cat");
 	c.status = 0;
-		var i =Random.Range(0, texts.Length);
+	c.mf_x = ix;
+	c.mf_y = top;
+	
+	var i =Random.Range(0, texts.Length);
 	var t:Texture =  texts[i];
 	if (t == null)
 		t = mt;
