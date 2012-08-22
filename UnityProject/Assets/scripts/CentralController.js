@@ -3,7 +3,7 @@
 // The ball prefab that will be used to create balls on demand.
 var ballPrefab : GameObject;
 // The number of balls that will be created but deactivated up front.
-var numberOfBallsToPreInstantiate = 5;
+var numberOfBallsToPreInstantiate = 7;
 // The floor object.
 var floor : GameObject;
 var mCamera: Camera;
@@ -13,8 +13,12 @@ var moving_cat:Cat;
 var drag_cat_speed:float = 0.1f;
 var texts: Texture[];
 static var inst:CentralController;
-var interval = 5;
+var interval = 1.5;
+var catrow_size = 7; // 7 cat one line
+var catcol_size = 9; // 9 cat one col
+
 var pf_explorsion:GameObject;
+var top_row:Cat[]=null;
 //var  m_timerManager;
 
 // Our handy-dandy pool, which allows us to reuse objects without creating/destroying them.
@@ -47,10 +51,18 @@ function Awake(){
 }
 
 function onTimer(){
-
+	//return;
+	Debug.Log("onTimer");
 	while (true){
 		yield WaitForSeconds (interval);
-		
+		if (top_row != null && top_row.length==catrow_size){
+			for (var i = 0; i< catrow_size; i++){
+				top_row[i].transform.position = new Vector3(i-3, 8, 0);
+				top_row[i].status = 1;
+			}
+		}
+		CreateCatRow();
+
 	}
 }
 // Tells each ball who we are.
@@ -82,8 +94,8 @@ function OnGUI(){
 	GUI.Label (Rect (Screen.width - 100,0,100,20), "Balls in Pool: " + ballPool.GetAvailableCount());
 	GUI.Label (Rect (Screen.width - 98,15,100,20), "Active Balls: " + ballPool.GetActiveCount());
 //	GUI.color = Color.red;
-	for (var k = 0; k < 7; k ++){
-		for (var kk = 0; kk < 7; kk ++){
+	for (var k = 0; k < catrow_size; k ++){
+		for (var kk = 0; kk < catcol_size; kk ++){
  			var _c:Cat = Cat.matrix[k,kk];
  			if (_c != null){
 	     		var pt:Vector2 = 	mCamera.WorldToScreenPoint(_c.transform.position);
@@ -134,22 +146,22 @@ function OnGUI(){
 			        var tp_w:Vector3 = mCamera.ScreenToWorldPoint(t.position);
 			        var x:int;
 			 
-			   	 	x = tp_w.x+2.5f;
+			   	 	x = tp_w.x+3.5f;
 			
 				var y:int = tp_w.y;
-	
-         	Debug.Log("touche("+tp_w+") move(x="+x+", y="+y+", moving_cat="+moving_cat);
-     
+			
+         	
 				
 				if (moving_cat != null){
-				
+				Debug.Log("touche("+tp_w+") move(x="+x+", y="+y+", moving_cat="+moving_cat + ", oldpos="+moving_cat.mf_x+","+moving_cat.mf_y);
+     
 					if ((y < 0) || (Cat.matrix[x,y]  != null && Cat.matrix[x,y] != moving_cat)){ // current position occupied
 						// revert to last position
 						  	moving_cat.transform.position = new Vector3(moving_cat.mf_x, moving_cat.mf_y, 0);
-					
+							Debug.Log("revert tomoldpos="+moving_cat.mf_x+","+moving_cat.mf_y);
 					}else{ 
 					
-			        Debug.Log("Moved delta "+touchDeltaPosition +", to "+t.position+"("+tp_w+")");
+			      //  Debug.Log("Moved delta "+touchDeltaPosition +", to "+t.position+"("+tp_w+")");
 			        // Move object across XY plane
 			      //  moving_cat.transform.Translate (touchDeltaPosition.x * drag_cat_speed, touchDeltaPosition.y * drag_cat_speed, 0);
 					
@@ -159,34 +171,37 @@ function OnGUI(){
 							var fx2:float = tp_w.x;
 							var fy2:float = tp_w.y;
 							
-							var ix2:int = tp_w.x+2.0f+0.5+0.5f;
+							var ix2:int = tp_w.x+3.0f+0.5+0.5f;
 							var iy2:int = tp_w.y;
 							
 						
 							
 							if (Cat.matrix[ix2, iy2] != null){
-								Debug.Log("collide right, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x);
+								Debug.Log("collide right, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
 								fx2 = moving_cat.mf_x;
-									fy2 = moving_cat.mf_y;
+								fy2 = moving_cat.mf_y;
 							}
 							
-							ix2  = tp_w.x+2.0f+0.5f-0.5f;
+							ix2  = tp_w.x+3.0f+0.5f-0.5f;
 							if (Cat.matrix[ix2, iy2] != null){
 								fx2 = moving_cat.mf_x;
-									fy2 = moving_cat.mf_y;
+								fy2 = moving_cat.mf_y;
+								Debug.Log("collide left, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
 							}
 							
-							ix2 = tp_w.x+2.5f;
+							ix2 = tp_w.x+3.5f;
 							iy2 = tp_w.y +0.5f;
 							if (Cat.matrix[ix2, iy2] != null){
 								fy2 = moving_cat.mf_y;
 								fx2 = moving_cat.mf_x;
+								Debug.Log("collide above, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
 							}
 							
 							iy2 = tp_w.y - 0.5f;
 							if (iy2 < 0 || Cat.matrix[ix2, iy2] != null){
 								fy2 = moving_cat.mf_y;
 								fx2 = moving_cat.mf_x;
+								Debug.Log("collide down, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
 							}
 							
 							//moving_cat.transform.position = new Vector3(tp_w.x, tp_w.y, 0);  
@@ -207,7 +222,7 @@ function OnGUI(){
 					
 				}
 				else { // moving_cat == null
-					if ((x -1 < 0 || Cat.matrix[x-1, y] != null) && (x+1>7 ||  Cat.matrix[x+1,y] != null) && ( y<1 || Cat.matrix[x, y-1] != null) && (y>6 || Cat.matrix[x, y+1] != null) ){
+					if ((x -1 < 0 || Cat.matrix[x-1, y] != null) && (x+1>catrow_size ||  Cat.matrix[x+1,y] != null) && ( y<1 || Cat.matrix[x, y-1] != null) && (y>6 || Cat.matrix[x, y+1] != null) ){
 					
 					}else{
 						if (Cat.matrix[x,y] != null){
@@ -216,6 +231,16 @@ function OnGUI(){
 							Debug.Log("moving cat = " + moving_cat.name +", "+x+", "+y);
 							Cat.matrix[x,y] = null;
 							moving_cat.status = 3;
+							
+							// pull down above cat
+							for (var j=y+1; j< 10; j++){
+								var c:Cat = Cat.matrix[x,j];
+								if (c != null){
+									c.status = 1;
+									Cat.matrix[x,j]=null;
+									//c.transform.position = new Vector3( c.transform.position.x, c.transform.position.y+0.5f*j, c.transform.position.z); 
+								}
+							}
 						}
 					}
 				 
@@ -227,10 +252,10 @@ function OnGUI(){
           Debug.Log("touche end");
        		 if (moving_cat	 != null){
         		// put into grid
-        		Debug.Log("moving_cat="+moving_cat);
+        		Debug.Log("moving_cat="+moving_cat+ " pos=" + moving_cat.transform.position);
         		var ix:int;
         	
-        			ix = moving_cat.transform.position.x+2.5f;
+        			ix = moving_cat.transform.position.x+3.5f;
         			ix -= 2;
         		//if (moving_cat.transform.position.x - ix > 0.5f)
         			//ix ++;
@@ -245,18 +270,21 @@ function OnGUI(){
     }
 }
 
-function SpawnBall(){
-	// Pick a random location
-	var x:float = Random.Range(-2.9, 2.9);
-	var ix:int = x;
-	var spawnPoint = Vector3(ix, top, 0.0);
-	// Place a ball there and activate it
+function CreateCatRow(){
+ 	top_row = new Cat[catrow_size];
+	for (var i = 0; i < catrow_size; i++){
+		var spawnPoint = Vector3(i-3, 10.5, 0.0);
+		top_row[i] = createCat(spawnPoint);
+	}
+	
+}
+
+function createCat(spawnPoint:Vector3){
+// Place a ball there and activate it
 	var o:GameObject = ballPool.Spawn(spawnPoint, Quaternion.identity);
 	var c:Cat = o.GetComponent("Cat");
-	c.status = 0;
-	c.mf_x = ix;
-	c.mf_y = top;
 	
+	// put texture
 	var i =Random.Range(0, texts.Length);
 	var t:Texture =  texts[i];
 	if (t == null)
@@ -264,6 +292,23 @@ function SpawnBall(){
 	o.renderer.material.mainTexture = t;
 //	var s:cat= target.GetComponent("Cat");
 	c.catType = i;
+	
+	c.status = 0;
+	c.mf_x = spawnPoint.x;
+	c.mf_y = spawnPoint.y;
+	Debug.Log("create cat at "+ spawnPoint);
+	return c;
+}
+
+function SpawnBall(){
+	// Pick a random location
+	var x:float = Random.Range(-2.9, 2.9);
+	var ix:int = x;
+	var spawnPoint = Vector3(ix, top, 0.0);
+	
+	var c:Cat = createCat(spawnPoint);
+	c.status = 1;
+	
 }
 
 

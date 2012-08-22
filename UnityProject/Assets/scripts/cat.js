@@ -3,7 +3,7 @@
 public var speed:float=5;
 public var status:int; // 0: initial status 1: free drop 2: fixed 3: draging 4: blocked when draging
 public var catType:int;
-public static var matrix:Object[,] = new Object[10,10];
+public static var matrix:Object[,] = new Object[20,20];
 
 // position in matrix
 private var mi_x:int;
@@ -22,24 +22,33 @@ function Update () {
 	//Debug.Log("update cat");
 	//var a = Input.GetAxisRaw("Vertical");
 
-	if (status < 2){
+	if (status  == 1){
 		var distance = speed * Time.deltaTime;
 		
 		
-		var iy:int = transform.position.y - distance;
-		var ix:int = transform.position.x + 2.5f;
-		Debug.Log("distance="+distance+ ", pos="+transform.position+ ",ix="+ix+", iy="+iy);
+		var iy:int = transform.position.y - distance -0.5f - 0.5f; // 0.5f: half size, 0.5f: floor is 0.5
+		var ix:int = transform.position.x + 3.0f + 0.5f;  // 0.5: ix start from -0.5
+		 
+		Debug.Log("updat cat "+name+" distance="+distance+ ", pos="+transform.position+ ",ix="+ix+", iy="+iy);
 		if (iy <= 0 ){// hit floor
-			iy = 0;
-			mf_x = transform.position.x = ix-2;
-			mf_y = transform.position.y = iy+0.5;
+			Debug.Log("hit floor while free dropping");
+	        iy = 0;
+		
+			while (Cat.matrix	[ix,iy] != null)
+				iy += 1;
+			mf_x = transform.position.x = ix-3;
+		//	mf_y = transform.position.y = iy+0.5f+0.5f;
+			mf_y = transform.position.y = iy+1.0f;
 			status = 2;
 			putIntoMatrix();
 		}else
 		
 		if (Cat.matrix	[ix,iy] != null){ // hit cat
-			mf_x = transform.position.x = ix-2;
-			mf_y = transform.position.y = iy+1.5f;
+			while (Cat.matrix	[ix,iy] != null)
+				iy += 1;
+			mf_x = transform.position.x = ix-3;
+			mf_y = transform.position.y = iy+1.0f;
+			//mf_y = transform.position.y = iy+1.5f+0.5f; // 1.0f revert one grid, 0.5f: y start from 0.5f
 			status = 2;
 			putIntoMatrix();
 		}
@@ -50,11 +59,12 @@ function Update () {
 			mf_y = transform.position.y;
 		
 		}
-		if (transform.position	.y	<0){
+		/*if (transform.position	.y	<0){
+		Debug.Log("hit floor2 while free dropping");
 			     transform.position = new Vector3( transform.position.x, 0.5, transform.position.z);
 			     putIntoMatrix();
 			     status = 2;
-		}
+		}*/
 		
 	}
 }
@@ -83,7 +93,7 @@ function OnCollisionEnter(obj:Collision)
         transform.position = new Vector3( transform.position.x, y, transform.position.z);
      }
 }*/
-
+/*
 function OnTriggerEnter(obj:Collider){
 
   //    Debug.Log("collide2 "+obj.gameObject.name + ", normal="+obj.contacts[0].normal+", speed="+obj.relativeVelocity+"," + "position:"+transform.position.x +","+transform.position.y);
@@ -126,29 +136,39 @@ function OnTriggerEnter(obj:Collider){
     }
     Debug.Log("leave onTriggerEnter");
 }
+*/
+
+function floatToPos(pos:Vector3){
+	var ix:int = pos.x + 0.5 +3.0f;// 3: ix start from -3, 0.5: fx start from -0.5
+	var iy:int = pos.y -0.5f;
+	return new Vector3(ix, iy, 0);
+}
 
 function putIntoMatrix(){
 	var y:int = transform.position.y;
 	var x:int;
-
-		x = transform.position.x+2.5f;
+	var pos = floatToPos(transform.position);
+	
+	//x = transform.position.x+3.5f; // 3: ix start from -3, 0.5: fx start from -0.5
 
 	Debug.Log("pos="+transform.position);	
 	
 	Debug.Log("matrix["+x+"]["+y+"]="+ this.name);	
-	Cat.matrix[x,y] = this;
-	mi_x = x;
-	mi_y = y;
-	mf_x = x-2.0f;
-	mf_y = y + 0.5f;
+	
+	Cat.matrix[pos.x, pos.y] = this;
+	
+	mi_x = pos.x;
+	mi_y = pos.y;
+	mf_x = pos.x-3.0f;
+	mf_y = pos.y + 1.0f;
 
 	// fix position.y
-	transform.position.y = y+0.5;
+	transform.position.y = mf_y;
 	
 	// check explorion
 	//if (Cat.matrix[x+1]
 	var ary_found = new Array();
-	findSame(ary_found, x, y);
+	findSame(ary_found, pos.x, pos.y);
 	if (ary_found	.length>=3){
 		var affected_col = new Array();
 		Debug.Log("found "+ary_found.Count + " connected");
