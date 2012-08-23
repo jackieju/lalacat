@@ -199,6 +199,8 @@ function putIntoMatrix(){
 	// fix position.y
 	transform.position.y = mf_y;
 	
+	CentralController.inst.splashFur(gameObject.transform.position, gameObject.transform.rotation);
+	
 	// check explorion
 	//if (Cat.matrix[x+1]
 	var ary_found = new Array();

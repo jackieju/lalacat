@@ -18,6 +18,7 @@ var catrow_size = 7; // 7 cat one line
 var catcol_size = 9; // 9 cat one col
 
 var pf_explorsion:GameObject;
+var pf_feather:GameObject; // animation of cat fur emitting, made by particle system
 var top_row:Cat[]=null;
 //var  m_timerManager;
 
@@ -361,4 +362,8 @@ explode(transform.position, transform.rotation);
 
 function explode(pos:Vector3 , rot:Quaternion ){
 	GameObject.Instantiate(pf_explorsion, pos, rot);
+}	
+
+function splashFur(pos:Vector3 , rot:Quaternion ){
+	GameObject.Instantiate(pf_feather, pos, rot);
 }	
