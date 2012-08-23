@@ -13,9 +13,12 @@ private var mi_y:int;
 public var mf_x:float;
 public var mf_y:float;
 
+public static var aniPlayer: AnimationPlayer;
+
 function start(){
 	status = 0; // before drop
 }
+
 
 function Update () {
 	
@@ -34,7 +37,7 @@ function Update () {
 			Debug.Log("hit floor while free dropping");
 	        iy = 0;
 		
-			while (Cat.matrix	[ix,iy] != null)
+			while (Cat.matrix	[ix,iy] != null && iy < 9)
 				iy += 1;
 			mf_x = transform.position.x = ix-3;
 		//	mf_y = transform.position.y = iy+0.5f+0.5f;
@@ -44,7 +47,7 @@ function Update () {
 		}else
 		
 		if (Cat.matrix	[ix,iy] != null){ // hit cat
-			while (Cat.matrix	[ix,iy] != null)
+			while (Cat.matrix	[ix,iy] != null && iy < 9)
 				iy += 1;
 			mf_x = transform.position.x = ix-3;
 			mf_y = transform.position.y = iy+1.0f;
@@ -67,6 +70,9 @@ function Update () {
 		}*/
 		
 	}
+}
+function playAnimationOnce(index){
+	aniPlayer.playOnce(this, catType, index);
 }
 /*
 function OnCollisionEnter(obj:Collision)
@@ -144,7 +150,35 @@ function floatToPos(pos:Vector3){
 	return new Vector3(ix, iy, 0);
 }
 
+
+function playAni(index){
+	
+	Cat.aniPlayer.playOnce(this, catType, index);
+}
+
+function playAniShake(){
+	//Cat.aniPlayer.shake(this);
+	
+	
+	//gameObject.guiTexture.pixelInset.y = 	gameObject.guiTexture.pixelInset.x - 10;
+	//yield;
+	//gameObject.guiTexture.pixelInset.y = 	gameObject.guiTexture.pixelInset.x + 20;
+	//yield;
+	//gameObject.guiTexture.pixelInset.y = 	gameObject.guiTexture.pixelInset.x - 10;
+	while (true){
+	renderer.material.mainTextureOffset= new Vector2(-0.03,0);
+	yield WaitForSeconds(0.03);
+	renderer.material.mainTextureOffset= new Vector2(0.03,0);
+	yield WaitForSeconds(0.03);
+	renderer.material.mainTextureOffset= new Vector2(-0.03,0);
+	yield WaitForSeconds(0.03);
+	}
+	Debug.Log("shake");
+}
+
 function putIntoMatrix(){
+	
+
 	var y:int = transform.position.y;
 	var x:int;
 	var pos = floatToPos(transform.position);
@@ -177,21 +211,20 @@ function putIntoMatrix(){
 			// eleminate it
 			//	ary_found[i].destroy();
 			var o:Cat = ary_found[i];
-			CentralController.inst.explode(o.gameObject.transform.position, o.gameObject.transform.rotation);
-			CentralController.inst.UnspawnBall(o.gameObject);
+			o.remove();
 		
 			o.status = 0;
 			Cat.matrix[o.mi_x, o.mi_y] = null;
 			
-			// pull down above cat
-			for (var j=o.mi_y+1; j< 10; j++){
-				var c:Cat = Cat.matrix[o.mi_x,j];
-				if (c != null){
-					c.status = 1;
-					Cat.matrix[o.mi_x,j]=null;
-					c.transform.position = new Vector3( c.transform.position.x, c.transform.position.y+0.5f*j, c.transform.position.z); 
-				}
-			}
+//			// pull down above cat
+//			for (var j=o.mi_y+1; j< 10; j++){
+//				var c:Cat = Cat.matrix[o.mi_x,j];
+//				if (c != null){
+//					c.status = 1;
+//					Cat.matrix[o.mi_x,j]=null;
+//					c.transform.position = new Vector3( c.transform.position.x, c.transform.position.y+0.5f*j, c.transform.position.z); 
+//				}
+//			}
 //			var j = 0;
 //			for ( j= 0; j < affected_col.length; j++){
 //				if (affected_col	[j] == o.mi_x)
@@ -209,6 +242,21 @@ function putIntoMatrix(){
 		
 	}
 
+}
+function remove(){
+	playAniShake();
+	yield WaitForSeconds(0.5);
+	CentralController.inst.explode(gameObject.transform.position, gameObject.transform.rotation);
+	CentralController.inst.UnspawnBall(gameObject);
+	// pull down above
+	for (var j=mi_y+1; j< 10; j++){
+		var c:Cat = Cat.matrix[mi_x,j];
+		if (c != null){
+			c.status = 1;
+			Cat.matrix[mi_x,j]=null;
+			c.transform.position = new Vector3( c.transform.position.x, c.transform.position.y+0.5f*j, c.transform.position.z); 
+		}
+	}
 }
 
 function addCatToAry(ary:Array, c:Cat){

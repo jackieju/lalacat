@@ -44,11 +44,14 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\scripts\AniPlayer.js" />
+     <Compile Include="Assets\scripts\AnimationPlayer.js" />
      <Compile Include="Assets\scripts\Cat.js" />
      <Compile Include="Assets\scripts\CentralController.js" />
      <Compile Include="Assets\scripts\DontGoThoughThings.js" />
      <Compile Include="Assets\scripts\DrawLine.js" />
      <Compile Include="Assets\scripts\GameObjectPool.js" />
+     <Compile Include="Assets\scripts\JAnimation.js" />
      <Compile Include="Assets\scripts\test.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -46,7 +46,18 @@ function Awake(){
 	Debug.Log("t1:"+texts[0]+",t2:"+texts[1]);
 	ballPool = GameObjectPool(ballPrefab, numberOfBallsToPreInstantiate*2, InitializeGameObject, false);
 	ballPool.PrePopulate(numberOfBallsToPreInstantiate);
-	 
+	
+	// init animation
+	Cat.aniPlayer = gameObject.AddComponent("AnimationPlayer");
+	
+	var ani:JAnimation = gameObject.AddComponent("JAnimation");
+	ani.addTexture("cat8");
+	ani.addTexture("cat6");
+	ani.addTexture("cat10");
+	ani.addTexture("cat3");
+	Cat.aniPlayer.addAnimationForCat(0, ani);
+	
+	
 	StartCoroutine("onTimer");
 }
 
@@ -290,6 +301,7 @@ function createCat(spawnPoint:Vector3){
 	if (t == null)
 		t = mt;
 	o.renderer.material.mainTexture = t;
+	o.renderer.material.mainTexture.wrapMode =  TextureWrapMode.Clamp;
 //	var s:cat= target.GetComponent("Cat");
 	c.catType = i;
 	
