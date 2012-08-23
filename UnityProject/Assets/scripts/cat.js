@@ -199,6 +199,9 @@ function putIntoMatrix(){
 	// fix position.y
 	transform.position.y = mf_y;
 	
+	// set position.z
+	transform.position.z = (7-pos.x)*1.0f + 0.1f*pos.y;
+	
 	CentralController.inst.splashFur(gameObject.transform.position, gameObject.transform.rotation);
 	
 	// check explorion

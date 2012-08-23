@@ -63,13 +63,13 @@ function Awake(){
 }
 
 function onTimer(){
-	//return;
+	return;
 	Debug.Log("onTimer");
 	while (true){
 		yield WaitForSeconds (interval);
 		if (top_row != null && top_row.length==catrow_size){
 			for (var i = 0; i< catrow_size; i++){
-				top_row[i].transform.position = new Vector3(i-3, 8, 0);
+				top_row[i].transform.position = new Vector3(i-3, 8, catrow_size-i);
 				top_row[i].status = 1;
 			}
 		}
@@ -285,7 +285,7 @@ function OnGUI(){
 function CreateCatRow(){
  	top_row = new Cat[catrow_size];
 	for (var i = 0; i < catrow_size; i++){
-		var spawnPoint = Vector3(i-3, 10.5, 0.0);
+		var spawnPoint = Vector3(i-3, 10.5, catrow_size-i);
 		top_row[i] = createCat(spawnPoint);
 	}
 	
