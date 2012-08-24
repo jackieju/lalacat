@@ -6,8 +6,8 @@ public var catType:int;
 public static var matrix:Object[,] = new Object[20,20];
 
 // position in matrix
-private var mi_x:int;
-private var mi_y:int;
+public var mi_x:int;
+public var mi_y:int;
 
 // standarized position
 public var mf_x:float;
@@ -32,13 +32,15 @@ function Update () {
 		var iy:int = transform.position.y - distance -0.5f - 0.5f; // 0.5f: half size, 0.5f: floor is 0.5
 		var ix:int = transform.position.x + 3.0f + 0.5f;  // 0.5: ix start from -0.5
 		 
-		Debug.Log("updat cat "+name+" distance="+distance+ ", pos="+transform.position+ ",ix="+ix+", iy="+iy);
+	//	Debug.Log("updat cat "+name+" distance="+distance+ ", pos="+transform.position+ ",ix="+ix+", iy="+iy);
 		if (iy <= 0 ){// hit floor
 			Debug.Log("hit floor while free dropping");
 	        iy = 0;
 		
-			while (Cat.matrix	[ix,iy] != null && iy < 9)
-				iy += 1;
+			if (Cat.matrix	[ix,iy] != this){
+				while (Cat.matrix	[ix,iy] != null && iy < 9)
+					iy += 1;
+			}
 			mf_x = transform.position.x = ix-3;
 		//	mf_y = transform.position.y = iy+0.5f+0.5f;
 			mf_y = transform.position.y = iy+1.0f;
@@ -47,8 +49,11 @@ function Update () {
 		}else
 		
 		if (Cat.matrix	[ix,iy] != null){ // hit cat
-			while (Cat.matrix	[ix,iy] != null && iy < 9)
-				iy += 1;
+			Debug.Log("this cat "+ this+" hit cat "+ix+","+iy+":"+Cat.matrix	[ix,iy]);
+			if (Cat.matrix	[ix,iy] != this){
+				while (Cat.matrix	[ix,iy] != null && iy < 9)
+					iy += 1;
+			}
 			mf_x = transform.position.x = ix-3;
 			mf_y = transform.position.y = iy+1.0f;
 			//mf_y = transform.position.y = iy+1.5f+0.5f; // 1.0f revert one grid, 0.5f: y start from 0.5f
@@ -144,10 +149,14 @@ function OnTriggerEnter(obj:Collider){
 }
 */
 
-function floatToPos(pos:Vector3){
+static function floatToPos(pos:Vector3){
 	var ix:int = pos.x + 0.5 +3.0f;// 3: ix start from -3, 0.5: fx start from -0.5
-	var iy:int = pos.y -0.5f;
-	return new Vector3(ix, iy, 0);
+	var iy:int = pos.y - 0.5f;
+	return new Vector3(ix, iy, pos.z);
+}
+
+static function posToFloat(pos:Vector3){
+	return new Vector3(pos.x-3.0f, pos.y +1.0f, pos.z);	
 }
 
 
@@ -250,7 +259,7 @@ function putIntoMatrix(){
 }
 function remove(){
 	playAniShake();
-	yield WaitForSeconds(0.5);
+	yield WaitForSeconds(0.6);
 	CentralController.inst.explode(gameObject.transform.position, gameObject.transform.rotation);
 	CentralController.inst.UnspawnBall(gameObject);
 	// pull down above

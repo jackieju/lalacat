@@ -51,6 +51,7 @@
      <Compile Include="Assets\scripts\DontGoThoughThings.js" />
      <Compile Include="Assets\scripts\DrawLine.js" />
      <Compile Include="Assets\scripts\GameObjectPool.js" />
+     <Compile Include="Assets\scripts\InputHandler.js" />
      <Compile Include="Assets\scripts\JAnimation.js" />
      <Compile Include="Assets\scripts\test.js" />
   </ItemGroup>

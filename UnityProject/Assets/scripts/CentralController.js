@@ -13,7 +13,7 @@ var moving_cat:Cat;
 var drag_cat_speed:float = 0.1f;
 var texts: Texture[];
 static var inst:CentralController;
-var interval = 1.5;
+var interval = 5;
 var catrow_size = 7; // 7 cat one line
 var catcol_size = 9; // 9 cat one col
 
@@ -48,6 +48,8 @@ function Awake(){
 	ballPool = GameObjectPool(ballPrefab, numberOfBallsToPreInstantiate*2, InitializeGameObject, false);
 	ballPool.PrePopulate(numberOfBallsToPreInstantiate);
 	
+	top_row = new Cat[catrow_size];
+	
 	// init animation
 	Cat.aniPlayer = gameObject.AddComponent("AnimationPlayer");
 	
@@ -60,22 +62,45 @@ function Awake(){
 	
 	
 	StartCoroutine("onTimer");
+	//InvokeRepeating("handleTouch", 0, 0.2);
 }
 
 function onTimer(){
 	return;
 	Debug.Log("onTimer");
+	CreateCatRow();
+	var gameover = true;
 	while (true){
 		yield WaitForSeconds (interval);
+		gameover = true;
 		if (top_row != null && top_row.length==catrow_size){
 			for (var i = 0; i< catrow_size; i++){
-				top_row[i].transform.position = new Vector3(i-3, 8, catrow_size-i);
-				top_row[i].status = 1;
+				if (top_row[i] != null && Cat.matrix[i,catcol_size-1] == null){
+			//		top_row[i].transform.position = new Vector3(i-3, catcol_size-1, catrow_size-i);
+					top_row[i].status = 1;
+					top_row[i] = null;
+					gameover = false;
+				}
 			}
 		}
-		CreateCatRow();
+		if (!gameover)
+			CreateCatRow();
+		else{
+			break;
+		}
 
 	}
+}
+
+function CreateCatRow(){
+ 	//top_row = new Cat[catrow_size];
+	for (var i = 0; i < catrow_size; i++){
+		if (top_row[i] == null){
+			var spawnPoint = Vector3(i-3, 10.5, catrow_size-i);
+			top_row[i] = createCat(spawnPoint);
+		}
+	}
+	
 }
 // Tells each ball who we are.
 function InitializeGameObject(target : GameObject){
@@ -101,12 +126,12 @@ function OnGUI(){
 	// Display a button that allows the user to spawn a ball at a random location.
 	if (GUI.Button (Rect (5, 5, 90, 40), "Spawn Ball")) {
 		SpawnBall();
-		Debug.Log("fire");
+		//Debug.Log("fire");
 	}
 	GUI.Label (Rect (Screen.width - 100,0,100,20), "Balls in Pool: " + ballPool.GetAvailableCount());
 	GUI.Label (Rect (Screen.width - 98,15,100,20), "Active Balls: " + ballPool.GetActiveCount());
 //	GUI.color = Color.red;
-	for (var k = 0; k < catrow_size; k ++){
+/*	for (var k = 0; k < catrow_size; k ++){
 		for (var kk = 0; kk < catcol_size; kk ++){
  			var _c:Cat = Cat.matrix[k,kk];
  			if (_c != null){
@@ -115,181 +140,41 @@ function OnGUI(){
          		GUI.Label(Rect(pt.x, Screen.height-pt.y-30, 100, 20), _c.name+"("+k+","+kk+")");
      		}
  		}
-     }
+     }*/
 	//Debug.Log("on gui");
 	
-	   for (var i = 0; i < Input.touchCount; ++i) {
-	   var t:Touch = Input.GetTouch(i);
-        if (Input.GetTouch(i).phase == TouchPhase.Began) {
-           Debug.Log("touche began");
-  /*         explode(Input.GetTouch(i).position, Quaternion.identity);
-           var touch = Input.GetTouch(i);
-           var ray:Ray = mCamera.ScreenPointToRay (new Vector3 (touch.position.x, touch.position.y,0));
-           var hits:RaycastHit[];
-           hits = Physics.RaycastAll (ray, 50);
-           if (hits.Length	> 0){
-           		for (var j = hits.Length-1; j >=0;j++){
-           		 var c = hits[j].collider;
-  			 	 Debug.Log("touching "+c.tag);
-  			  
-	  			   if (c.tag == "cat"){
-	  			 	 moving_cat = c.GetComponent("Cat");
-	  			  	 moving_cat.status = 3;
-	  			  }
-  			   }
-  			}*/
-  			    var tp_w1:Vector3 = mCamera.ScreenToWorldPoint(t.position);
-			     var x1:int = tp_w1.x;
-				var y1:int = tp_w1.y;
-				x1+=2;
-         	Debug.Log("touche move(x="+x1+", y="+y1+", cat="+Cat.matrix[x1,y1]);
-         /*	if (Cat.matrix[x1,y1] == null){
-         		for (var ll = 0; ll < 7; ll ++){
-         			for (var lll = 0; lll < 7; lll ++)
-         				
-         				Debug.Log("matrix["+ll+"]["+lll+"]="+Cat.matrix[ll,lll]);
-         		}
-         	}*/
-        }else
-         if (Input.GetTouch(i).phase == TouchPhase.Moved ){
-         		
-			         // Get movement of the finger since last frame
-			        var touchDeltaPosition:Vector2 = Input.GetTouch(i).deltaPosition;
-			        var tp_w:Vector3 = mCamera.ScreenToWorldPoint(t.position);
+	  
+}
+
+/*function catchCat(tp_w:Vector3){
 			        var x:int;
 			 
 			   	 	x = tp_w.x+3.5f;
 			
 				var y:int = tp_w.y;
+	if ((x -1 < 0 || Cat.matrix[x-1, y] != null) && (x+1>catrow_size ||  Cat.matrix[x+1,y] != null) && ( y<1 || Cat.matrix[x, y-1] != null) && (y>6 || Cat.matrix[x, y+1] != null) ){
+					
+	}else{
+		if (Cat.matrix[x,y] != null){
 			
-         	
-				
-				if (moving_cat != null){
-				Debug.Log("touche("+tp_w+") move(x="+x+", y="+y+", moving_cat="+moving_cat + ", oldpos="+moving_cat.mf_x+","+moving_cat.mf_y);
-     
-					if ((y < 0) || (Cat.matrix[x,y]  != null && Cat.matrix[x,y] != moving_cat)){ // current position occupied
-						// revert to last position
-						  	moving_cat.transform.position = new Vector3(moving_cat.mf_x, moving_cat.mf_y, 0);
-							Debug.Log("revert tomoldpos="+moving_cat.mf_x+","+moving_cat.mf_y);
-					}else{ 
-					
-			      //  Debug.Log("Moved delta "+touchDeltaPosition +", to "+t.position+"("+tp_w+")");
-			        // Move object across XY plane
-			      //  moving_cat.transform.Translate (touchDeltaPosition.x * drag_cat_speed, touchDeltaPosition.y * drag_cat_speed, 0);
-					
-//						if (moving_cat.status != 4){
-							// check if collide others
-					
-							var fx2:float = tp_w.x;
-							var fy2:float = tp_w.y;
-							
-							var ix2:int = tp_w.x+3.0f+0.5+0.5f;
-							var iy2:int = tp_w.y;
-							
-						
-							
-							if (Cat.matrix[ix2, iy2] != null){
-								Debug.Log("collide right, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
-								fx2 = moving_cat.mf_x;
-								fy2 = moving_cat.mf_y;
-							}
-							
-							ix2  = tp_w.x+3.0f+0.5f-0.5f;
-							if (Cat.matrix[ix2, iy2] != null){
-								fx2 = moving_cat.mf_x;
-								fy2 = moving_cat.mf_y;
-								Debug.Log("collide left, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
-							}
-							
-							ix2 = tp_w.x+3.5f;
-							iy2 = tp_w.y +0.5f;
-							if (Cat.matrix[ix2, iy2] != null){
-								fy2 = moving_cat.mf_y;
-								fx2 = moving_cat.mf_x;
-								Debug.Log("collide above, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
-							}
-							
-							iy2 = tp_w.y - 0.5f;
-							if (iy2 < 0 || Cat.matrix[ix2, iy2] != null){
-								fy2 = moving_cat.mf_y;
-								fx2 = moving_cat.mf_x;
-								Debug.Log("collide down, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
-							}
-							
-							//moving_cat.transform.position = new Vector3(tp_w.x, tp_w.y, 0);  
-							moving_cat.mf_x = fx2;
-							moving_cat.mf_y = fy2;
-							moving_cat.transform.position = new Vector3(fx2, fy2, 0);
-							//cat.mf_y = y + 0.5f;
-//						}
-//						else{
-//							var a = x- moving_cat.transform.position.x;
-//							var b = y+0.5 - moving_cat.transform.position.y;
-//							//moving_cat.transform.position = new Vector3(x, y+0.5f, 0);
-//							moving_cat.transform.Translate(new Vector3(a, b, 0));
-//							moving_cat.status = 3;
-//						}
-					
-					}
-					
-				}
-				else { // moving_cat == null
-					if ((x -1 < 0 || Cat.matrix[x-1, y] != null) && (x+1>catrow_size ||  Cat.matrix[x+1,y] != null) && ( y<1 || Cat.matrix[x, y-1] != null) && (y>6 || Cat.matrix[x, y+1] != null) ){
-					
-					}else{
-						if (Cat.matrix[x,y] != null){
-							
-							moving_cat = Cat.matrix[x,y];
-							Debug.Log("moving cat = " + moving_cat.name +", "+x+", "+y);
-							Cat.matrix[x,y] = null;
-							moving_cat.status = 3;
-							
-							// pull down above cat
-							for (var j=y+1; j< 10; j++){
-								var c:Cat = Cat.matrix[x,j];
-								if (c != null){
-									c.status = 1;
-									Cat.matrix[x,j]=null;
-									//c.transform.position = new Vector3( c.transform.position.x, c.transform.position.y+0.5f*j, c.transform.position.z); 
-								}
-							}
-						}
-					}
-				 
-				}
-		//		Debug.Log("touch moved");
+			moving_cat = Cat.matrix[x,y];
+			Debug.Log("moving cat = " + moving_cat.name +", "+x+", "+y);
+			Cat.matrix[x,y] = null;
+			moving_cat.status = 3;
 			
-				break;
-          } else if (Input.GetTouch(i).phase == TouchPhase.Ended || Input.GetTouch(i).phase == TouchPhase.Canceled){
-          Debug.Log("touche end");
-       		 if (moving_cat	 != null){
-        		// put into grid
-        		Debug.Log("moving_cat="+moving_cat+ " pos=" + moving_cat.transform.position);
-        		var ix:int;
-        	
-        			ix = moving_cat.transform.position.x+3.5f;
-        			ix -= 2;
-        		//if (moving_cat.transform.position.x - ix > 0.5f)
-        			//ix ++;
-        			
-        		moving_cat.transform.position = new Vector3(ix, moving_cat.transform.position.y, moving_cat.transform.position.z);
-        		moving_cat.status = 1;
-        		moving_cat = null;
-        	}
-        	break;
-        }
-        
-    }
-}
-
-function CreateCatRow(){
- 	top_row = new Cat[catrow_size];
-	for (var i = 0; i < catrow_size; i++){
-		var spawnPoint = Vector3(i-3, 10.5, catrow_size-i);
-		top_row[i] = createCat(spawnPoint);
+			// pull down above cat
+			for (var j=y+1; j< 10; j++){
+				var c:Cat = Cat.matrix[x,j];
+				if (c != null){
+					c.status = 1;
+					Cat.matrix[x,j]=null;
+					//c.transform.position = new Vector3( c.transform.position.x, c.transform.position.y+0.5f*j, c.transform.position.z); 
+				}
+			}
+		}
 	}
-	
-}
+}*/
+
 
 function createCat(spawnPoint:Vector3){
 // Place a ball there and activate it
@@ -323,6 +208,7 @@ function SpawnBall(){
 	c.status = 1;
 	
 }
+
 
 
 function UnspawnBall(ball : GameObject){
