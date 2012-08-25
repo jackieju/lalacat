@@ -112,6 +112,13 @@ function handleTouch(){
 								Debug.Log("collide down with "+ix2+ ","+ iy2+", fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
 							}
 							
+							
+							if (tp_w.y >9){
+								fy2 = moving_cat.mf_y;
+								fx2 = moving_cat.mf_x;
+								Debug.Log("collide ceiling with "+ix2+ ","+ iy2+", fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
+							}
+							
 							//moving_cat.transform.position = new Vector3(tp_w.x, tp_w.y, 0);  
 							moving_cat.mf_x = fx2;
 							moving_cat.mf_y = fy2;

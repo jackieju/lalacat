@@ -7,6 +7,10 @@ var numberOfBallsToPreInstantiate = 7;
 // The floor object.
 var floor : GameObject;
 var mCamera: Camera;
+var board: GameObject;
+var board_high_pos_y:float;
+var board_low_pos_y:float;
+
 var top=3;
 var mt:Texture;
 var moving_cat:Cat;
@@ -37,13 +41,21 @@ function Awake(){
 	// to pre-instantiate. That way it won't have to do any array reallocations behind the scenes if
 	// we grow.
 	inst = this;
-	texts = new Texture[4];
+	texts = new Texture[8];
 	//var a = Resources.Load("cat3");
 	//Debug.Log("resource:"+a+"//");
-	texts[0] =  Resources.Load("cat3");
-	texts[1] =  Resources.Load("cat8");
-	texts[2] =  Resources.Load("cat6");
-	texts[3] =  Resources.Load("Cat10");
+//	texts[0] =  Resources.Load("cat3");
+//	texts[1] =  Resources.Load("cat8");
+//	texts[2] =  Resources.Load("cat6");
+//	texts[3] =  Resources.Load("Cat10");
+	texts[0] =  Resources.Load("cat16");
+	texts[1] =  Resources.Load("cat12");
+	texts[2] =  Resources.Load("cat13");
+	texts[3] =  Resources.Load("Cat15");
+	texts[4] = Resources.Load("Cat11");
+	texts[5] = Resources.Load("Cat12");
+	texts[6] = Resources.Load("Cat13");
+	texts[7] = Resources.Load("Cat15");
 	Debug.Log("t1:"+texts[0]+",t2:"+texts[1]);
 	ballPool = GameObjectPool(ballPrefab, numberOfBallsToPreInstantiate*2, InitializeGameObject, false);
 	ballPool.PrePopulate(numberOfBallsToPreInstantiate);
@@ -66,8 +78,28 @@ function Awake(){
 }
 
 function onTimer(){
-	//return;
+	return;
 	Debug.Log("onTimer");
+	
+	// show animation sliding down board
+	while (true){
+		//yield WaitForSeconds (0.1);
+		board.transform.position.y = board.transform.position.y-1;
+		if (board.transform.position.y <= board_low_pos_y){
+			board.transform.position.y = board_low_pos_y-0.5f;
+			yield WaitForSeconds (0.1);
+		//yield;
+			board.transform.position.y = board_low_pos_y+0.2f;
+			yield WaitForSeconds (0.1);
+			//yield;
+			board.transform.position.y = board_low_pos_y;
+			break;
+		}
+		yield;
+	}
+
+	
+	
 	CreateCatRow();
 	var gameover = true;
 	while (true){

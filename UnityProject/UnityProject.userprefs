@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/CentralController.js">
+    <Files>
+      <File FileName="Assets/scripts/cat.js" Line="20" Column="16" />
+      <File FileName="Assets/scripts/DontGoThoughThings.js" Line="28" Column="42" />
+      <File FileName="Assets/scripts/CentralController.js" Line="78" Column="31" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
