@@ -32,7 +32,7 @@ function Update () {
 		var iy:int = transform.position.y - distance -0.5f - 0.5f; // 0.5f: half size, 0.5f: floor is 0.5
 		var ix:int = transform.position.x + 3.0f + 0.5f;  // 0.5: ix start from -0.5
 		 
-	//	Debug.Log("updat cat "+name+" distance="+distance+ ", pos="+transform.position+ ",ix="+ix+", iy="+iy);
+		Debug.Log("updat cat "+name+" distance="+distance+ ", position="+transform.position+ ",ix="+ix+", iy="+iy);
 		if (iy <= 0 ){// hit floor
 			Debug.Log("hit floor while free dropping");
 	        iy = 0;
@@ -188,10 +188,10 @@ function playAniShake(){
 function putIntoMatrix(){
 	
 
-	var y:int = transform.position.y;
-	var x:int;
+
 	var pos = floatToPos(transform.position);
-	
+	var x:int = pos.x;
+	var y:int = pos.y;
 	//x = transform.position.x+3.5f; // 3: ix start from -3, 0.5: fx start from -0.5
 
 	Debug.Log("pos="+transform.position);	

@@ -66,7 +66,7 @@ function Awake(){
 }
 
 function onTimer(){
-	return;
+	//return;
 	Debug.Log("onTimer");
 	CreateCatRow();
 	var gameover = true;
