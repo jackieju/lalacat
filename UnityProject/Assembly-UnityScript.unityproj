@@ -54,6 +54,7 @@
      <Compile Include="Assets\scripts\InputHandler.js" />
      <Compile Include="Assets\scripts\JAnimation.js" />
      <Compile Include="Assets\scripts\Mainmenu.js" />
+     <Compile Include="Assets\scripts\Mainmenu_cat.js" />
      <Compile Include="Assets\scripts\test.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

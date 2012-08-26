@@ -18,8 +18,8 @@ var drag_cat_speed:float = 0.1f;
 var texts: Texture[];
 static var inst:CentralController;
 var interval = 5;
-var catrow_size = 7; // 7 cat one line
-var catcol_size = 9; // 9 cat one col
+public static var catrow_size = 7; // 7 cat one line
+public static var catcol_size = 9; // 9 cat one col
 
 var pf_explorsion:GameObject;
 var pf_feather:GameObject; // animation of cat fur emitting, made by particle system
@@ -78,7 +78,7 @@ function Awake(){
 }
 
 function onTimer(){
-	return;
+	//return;
 	Debug.Log("onTimer");
 	
 	// show animation sliding down board

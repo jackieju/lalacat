@@ -1,5 +1,5 @@
 var moving_cat:Cat=null;
-var catrow_size:int = 7;
+
 function start(){
 	
 }
@@ -43,7 +43,7 @@ function handleTouch(){
          				Debug.Log("matrix["+ll+"]["+lll+"]="+Cat.matrix[ll,lll]);
          		}
          	}*/
-         	Debug.Log("touch to "+tp_w1);
+        // 	Debug.Log("touch to "+tp_w1);
 	     	if (moving_cat == null)
 	         	catchCat(tp_w1);
         }else
@@ -58,7 +58,7 @@ function handleTouch(){
 			
 				var y:int = tp_w.y;
 			
-         		Debug.Log("move to "+tp_w);
+         	//	Debug.Log("move to "+tp_w);
 				
 				if (moving_cat != null){
 				//Debug.Log("touche("+tp_w+") move(x="+x+", y="+y+", moving_cat="+moving_cat + ", oldpos="+moving_cat.mf_x+","+moving_cat.mf_y);
@@ -125,7 +125,7 @@ function handleTouch(){
 							moving_cat.transform.position = new Vector3(fx2, fy2, 0);
 							//cat.mf_y = y + 0.5f;
 							
-							Debug.Log("Moved delta "+touchDeltaPosition +", to "+t.position+"("+tp_w+")"+ moving_cat.transform.position);
+							//Debug.Log("Moved delta "+touchDeltaPosition +", to "+t.position+"("+tp_w+")"+ moving_cat.transform.position);
 							// check if it just leave its own position
 							var np:Vector3 = Cat.floatToPos(moving_cat.transform.position);
 							if ( (moving_cat.mi_x != np.x || moving_cat.mi_y != np.y) && Cat.matrix[moving_cat.mi_x,moving_cat.mi_y] == moving_cat){			
@@ -187,7 +187,7 @@ function catchCat(tp_w:Vector3){
 	
 	var x:int = _p.x;	 
 	var y:int = _p.y;
-	if ((x -1 < 0 || Cat.matrix[x-1, y] != null) && (x+1>catrow_size ||  Cat.matrix[x+1,y] != null) && ( y<1 || Cat.matrix[x, y-1] != null) && (y>6 || Cat.matrix[x, y+1] != null) ){
+	if ((x -1 < 0 || Cat.matrix[x-1, y] != null) && (x+1>CentralController.catrow_size ||  Cat.matrix[x+1,y] != null) && ( y<1 || Cat.matrix[x, y-1] != null) && (y>CentralController.catcol_size || Cat.matrix[x, y+1] != null) ){
 					
 	}else{
 		if (Cat.matrix[x,y] != null){
