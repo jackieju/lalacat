@@ -17,17 +17,25 @@ var moving_cat:Cat;
 var drag_cat_speed:float = 0.1f;
 var texts: Texture[];
 static var inst:CentralController;
-var interval = 5;
+var interval = 2;
 public static var catrow_size = 7; // 7 cat one line
 public static var catcol_size = 9; // 9 cat one col
 
 var pf_explorsion:GameObject;
 var pf_feather:GameObject; // animation of cat fur emitting, made by particle system
 var top_row:Cat[]=null;
+
+var water:GameObject;
 //var  m_timerManager;
 
 // Our handy-dandy pool, which allows us to reuse objects without creating/destroying them.
 private var ballPool : GameObjectPool;
+
+
+public var fish:Fish;
+public var current_wave_catrow_number = 0;  // dropped catrow number of current wave 
+public var current_wave = 0;
+public var current_wave_catrow_count = 10;  // how many row of cats this wave has
 
 // Awake is a built-in unity function that is called called only once during the lifetime of the script instance.
 // It is called after all objects are initialized.
@@ -98,11 +106,11 @@ function onTimer(){
 		yield;
 	}
 
-	
+	water.renderer.material.color.a = 0.1f;
 	
 	CreateCatRow();
 	var gameover = true;
-	while (true){
+	while (current_wave_catrow_number < current_wave_catrow_count){
 		yield WaitForSeconds (interval);
 		gameover = true;
 		if (top_row != null && top_row.length==catrow_size){
@@ -115,8 +123,11 @@ function onTimer(){
 				}
 			}
 		}
-		if (!gameover)
+		if (!gameover){
 			CreateCatRow();
+			fish.playAni(10);
+			current_wave_catrow_number++;
+		}
 		else{
 			break;
 		}
@@ -125,7 +136,7 @@ function onTimer(){
 }
 
 function CreateCatRow(){
- 	//top_row = new Cat[catrow_size];
+ 	//top_row = new Cat[catrow_size];s
 	for (var i = 0; i < catrow_size; i++){
 		if (top_row[i] == null){
 			var spawnPoint = Vector3(i-3, 10.5, catrow_size-i);
@@ -156,12 +167,12 @@ function OnGUI(){
 		*/
 //		   DrawLine.DrawLine(new Vectro2(0,0), pointB, color, width);
 	// Display a button that allows the user to spawn a ball at a random location.
-	if (GUI.Button (Rect (5, 5, 90, 40), "Spawn Ball")) {
+/*	if (GUI.Button (Rect (5, 5, 90, 40), "Spawn Ball")) {
 		SpawnBall();
 		//Debug.Log("fire");
 	}
 	GUI.Label (Rect (Screen.width - 100,0,100,20), "Balls in Pool: " + ballPool.GetAvailableCount());
-	GUI.Label (Rect (Screen.width - 98,15,100,20), "Active Balls: " + ballPool.GetActiveCount());
+	GUI.Label (Rect (Screen.width - 98,15,100,20), "Active Balls: " + ballPool.GetActiveCount());*/
 //	GUI.color = Color.red;
 /*	for (var k = 0; k < catrow_size; k ++){
 		for (var kk = 0; kk < catcol_size; kk ++){
