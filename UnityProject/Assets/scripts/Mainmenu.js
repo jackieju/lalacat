@@ -1,12 +1,27 @@
 public var bgTexture:Texture;
 public var catTexture:Texture;
+public var menu:GameObject;
 var index = 1;
 var d = 0;
 var starttime = 0;
+function Start(){
+Awake();
+
+}
 function Awake(){
 	index = 0;
 	d = 0;
 	starttime= Time.time;
+//	menu.renderer.transform.position.x = -6f;
+	yield WaitForSeconds(1);
+	//menu.renderer.transform.position.x = -6f;
+	while (menu.renderer.transform.position.x <-1.1f){
+		menu.renderer.transform.position.x += 1.5f;
+		yield;
+	}
+	//menu.renderer.transform.position.x = 0.5f;
+//	yield;
+	menu.renderer.transform.position.x = -1.1f;
 }
 function OnGUI(){
 	//catTexture.wrapMode =  TextureWrapMode.Repeat;
