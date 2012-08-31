@@ -1,10 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/CentralController.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/Fish.js">
     <Files>
-      <File FileName="Assets/scripts/cat.js" Line="20" Column="16" />
-      <File FileName="Assets/scripts/DontGoThoughThings.js" Line="28" Column="42" />
-      <File FileName="Assets/scripts/CentralController.js" Line="78" Column="31" />
+      <File FileName="Assets/scripts/CentralController.js" Line="137" Column="21" />
+      <File FileName="Assets/scripts/Fish.js" Line="4" Column="8" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

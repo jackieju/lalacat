@@ -11,10 +11,10 @@ var board: GameObject;
 var board_high_pos_y:float;
 var board_low_pos_y:float;
 
-var top=3;
+var top=10;
 var mt:Texture;
 var moving_cat:Cat;
-var drag_cat_speed:float = 0.1f;
+//var drag_cat_speed:float = 0.1f;
 var texts: Texture[];
 static var inst:CentralController;
 var interval = 2;
@@ -34,9 +34,12 @@ private var ballPool : GameObjectPool;
 
 public var fish:Fish;
 public var current_wave_catrow_number = 0;  // dropped catrow number of current wave 
-public var current_wave = 0;
+public var current_wave = 1;
 public var current_wave_catrow_count = 10;  // how many row of cats this wave has
 
+
+public var level_fish:GameObject;
+public var level_info:TextMesh ;
 // Awake is a built-in unity function that is called called only once during the lifetime of the script instance.
 // It is called after all objects are initialized.
 // For more info, see:
@@ -58,8 +61,8 @@ function Awake(){
 //	texts[3] =  Resources.Load("Cat10");
 	texts[0] =  Resources.Load("cat16");
 	texts[1] =  Resources.Load("cat12");
-	texts[2] =  Resources.Load("cat13");
-	texts[3] =  Resources.Load("Cat15");
+	texts[2] =  Resources.Load("cat4");
+	texts[3] =  Resources.Load("Cat7");
 	texts[4] = Resources.Load("Cat11");
 	texts[5] = Resources.Load("Cat12");
 	texts[6] = Resources.Load("Cat13");
@@ -69,6 +72,8 @@ function Awake(){
 	ballPool.PrePopulate(numberOfBallsToPreInstantiate);
 	
 	top_row = new Cat[catrow_size];
+	
+	level_fish.transform.position.y = 15;
 	
 	// init animation
 	Cat.aniPlayer = gameObject.AddComponent("AnimationPlayer");
@@ -106,11 +111,15 @@ function onTimer(){
 		yield;
 	}
 
-	water.renderer.material.color.a = 0.1f;
+//	water.renderer.material.color.a = 0.1f;
+	
+	playani_level();
+
 	
 	CreateCatRow();
 	var gameover = true;
-	while (current_wave_catrow_number < current_wave_catrow_count){
+//	while (current_wave_catrow_number < current_wave_catrow_count){
+	while (true){
 		yield WaitForSeconds (interval);
 		gameover = true;
 		if (top_row != null && top_row.length==catrow_size){
@@ -127,12 +136,40 @@ function onTimer(){
 			CreateCatRow();
 			fish.playAni(10);
 			current_wave_catrow_number++;
+			if (current_wave_catrow_number >= 10){
+				current_wave_catrow_number = 0;
+				current_wave += 1;
+				Cat.speed += 2;
+				StartCoroutine("playani_level");
+				fish.reset();
+			}
 		}
 		else{
 			break;
 		}
 
 	}
+	
+
+}
+
+function playani_level(){
+
+	//level_fish.renderer.guiText.text = "afasdf";
+	//var li:TextMesh = GameObject.Find("levelinfo");
+	var level_number = current_wave + 1;
+//	Debug.Log("level "+ level_number);
+	level_info.text = "Level "+ level_number;
+		while (true){
+			level_fish.transform.position.y -= 2;
+			if (level_fish.transform	.position	.y	 <=5.5f){
+				level_fish.transform.position.y = 5.5f;
+				break;
+			}
+			yield WaitForSeconds(0.1f);
+		}
+		yield WaitForSeconds(3);
+		level_fish.transform.position.y = 15;
 }
 
 function CreateCatRow(){

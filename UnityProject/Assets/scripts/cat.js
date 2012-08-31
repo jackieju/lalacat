@@ -1,6 +1,6 @@
 
 //class cat extends MonoBehaviour{
-public var speed:float=5;
+public static var  speed:float=5;
 public var status:int; // 0: initial status 1: free drop 2: fixed 3: draging 4: blocked when draging
 public var catType:int;
 public static var matrix:Object[,] = new Object[20,20];

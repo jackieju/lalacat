@@ -4,11 +4,9 @@ public var menu:GameObject;
 var index = 1;
 var d = 0;
 var starttime = 0;
+var mc:Camera;
+public var btTexture:Texture;
 function Start(){
-Awake();
-
-}
-function Awake(){
 	index = 0;
 	d = 0;
 	starttime= Time.time;
@@ -22,8 +20,33 @@ function Awake(){
 	//menu.renderer.transform.position.x = 0.5f;
 //	yield;
 	menu.renderer.transform.position.x = -1.1f;
+
 }
+/*function Awake(){
+	index = 0;
+	d = 0;
+	starttime= Time.time;
+//	menu.renderer.transform.position.x = -6f;
+	yield WaitForSeconds(1);
+	//menu.renderer.transform.position.x = -6f;
+	while (menu.renderer.transform.position.x <-1.1f){
+		menu.renderer.transform.position.x += 1.5f;
+		yield;
+	}
+	//menu.renderer.transform.position.x = 0.5f;
+//	yield;
+	menu.renderer.transform.position.x = -1.1f;
+}*/
+
+
 function OnGUI(){
+
+	var blankStyle : GUIStyle=new GUIStyle();; // the blank style make button transparent
+	// GUI.Button(new Rect(100, 210, 112, 66), "test position");
+	 if (GUI.Button(new Rect(100, 210, 112, 66), "", blankStyle)){
+	 	Application.LoadLevel("main");
+	 	
+	 	}
 	//catTexture.wrapMode =  TextureWrapMode.Repeat;
   /* 	GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), bgTexture);
 	
@@ -57,8 +80,28 @@ function OnGUI(){
 	starttime = Time.time;
     }
     */
-	if (Input.touchCount>0 || Input.anyKeyDown){
+/*	if (Input.touchCount>0 || Input.anyKeyDown){
 		Application.LoadLevel("main");
 	}	
-	
+*/	
+
+/*
+ for (var i = 0; i < Input.touchCount; ++i) {
+	    var touch = Input.GetTouch(i);
+	    
+           var ray:Ray = mc.ScreenPointToRay (new Vector3 (touch.position.x, touch.position.y,0));
+           var hits:RaycastHit[];
+           hits = Physics.RaycastAll (ray, 50);
+           if (hits.Length	> 0){
+           		for (var j = hits.Length-1; j >=0;j++){
+           		 var c = hits[j].collider;
+  			 	 Debug.Log("touching "+c.tag);
+  			  
+	  			   if (c.tag == "start_button"){
+	  				Application.LoadLevel("main");
+	  			  }
+  			   }
+  			}
+  	}
+	*/
 }
