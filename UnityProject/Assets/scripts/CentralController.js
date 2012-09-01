@@ -40,11 +40,22 @@ public var current_wave_catrow_count = 10;  // how many row of cats this wave ha
 
 public var level_fish:GameObject;
 public var level_info:TextMesh ;
+
+public var score:int=0;
+public var score_text:TextMesh;
+
+public static var status = 0;
+public static var t_scale:float;
+
+public  var pauseMenu:GameObject;
+public static var HDRatio:float = 2;
 // Awake is a built-in unity function that is called called only once during the lifetime of the script instance.
 // It is called after all objects are initialized.
 // For more info, see:
 // http://unity3d.com/support/documentation/ScriptReference/MonoBehaviour.Awake.html
 function Awake(){
+
+HDRatio = Screen.height/480.0f;
  //	m_timerManager = gameObject.AddComponent("TimerManager");
  	//m_timerManager1.initTimer(1, 11, new Rect(100, 100, 100, 100), gameObject, mySkin.customStyles[0]); 
 
@@ -192,6 +203,11 @@ function InitializeGameObject(target : GameObject){
 
 }
 
+function HDRect(x:float,y:float,w:float,h:float){
+
+return Rect(x*HDRatio, y*HDRatio, w*HDRatio, h*HDRatio);
+
+}
 // OnGUI is a built-in unity function. All our button/label logic goes here.
 // For more info, see:
 // http://unity3d.com/support/documentation/Components/GUI%20Scripting%20Guide.html
@@ -222,8 +238,94 @@ function OnGUI(){
  		}
      }*/
 	//Debug.Log("on gui");
+	var blankStyle = new GUIStyle();
+	if (status == 0) {// playing
+		if (GUI.Button (Rect (0, 105, 30, 25), "", blankStyle)) {
+			t_scale = Time.timeScale;
+			Time.timeScale = 0;
+			status = 1; // paused
+			StartCoroutine("showPauseMenu");
+		}
+	}else if (status == 1){
+		if (GUI.Button (HDRect (65, 183, 170, 45), "" , blankStyle )){ // resume
+			onResume();
+		}
+		if (GUI.Button (HDRect (65, 233, 170, 45), "", blankStyle) ){ // replay
+			onReplay();
+		}
+	
+		if (GUI.Button (HDRect (65, 283, 170, 45), "",blankStyle ) ){ // help
+			onHelp();
+		}
+	
+		if (GUI.Button (HDRect (65, 333, 170, 45), "" ) ){ // quit
+			onQuit();
+		}
+	
+	
+	}
 	
 	  
+}
+
+function onHelp(){
+//		Time.timeScale = t_scale;
+		status = 0;
+		//yield hidePauseMenu();
+//			StartCoroutine("hidePauseMenu");
+}
+
+function onResume(){
+	Time.timeScale = t_scale;
+	
+	status = 0; 
+	//StartCoroutine("hidePauseMenu");
+	yield hidePauseMenu();
+}
+
+function onReplay(){
+	
+	Time.timeScale = t_scale;
+	
+	status = 0; 
+	//StartCoroutine("hidePauseMenu");
+	yield hidePauseMenu();
+
+	Debug.Log("load  level 1");
+ 
+	Application.LoadLevel(1);
+}
+function onQuit(){
+	
+	Time.timeScale = t_scale;
+	
+	status = 0; 
+	//StartCoroutine("hidePauseMenu");
+	yield hidePauseMenu();
+
+	Debug.Log("load  level 1");
+ 
+	Application.LoadLevel(0);
+}
+function showPauseMenu(){
+	while (pauseMenu.renderer.transform.position.x <-0.36f){
+		pauseMenu.renderer.transform.position.x += 1.5f;
+		yield;
+	}
+
+	pauseMenu.renderer.transform.position.x = -0.36f;
+
+}
+
+function hidePauseMenu(){
+Debug.Log("hidepausemenu");
+	while (pauseMenu.renderer.transform.position.x > -7.0f){
+		pauseMenu.renderer.transform.position.x -= 1.5f;
+		yield;
+	}
+
+	pauseMenu.renderer.transform.position.x = -7.0f;
+Debug.Log("leave hidepausemenu");
 }
 
 /*function catchCat(tp_w:Vector3){

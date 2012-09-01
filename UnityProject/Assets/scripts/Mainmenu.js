@@ -43,7 +43,7 @@ function OnGUI(){
 
 	var blankStyle : GUIStyle=new GUIStyle();; // the blank style make button transparent
 	// GUI.Button(new Rect(100, 210, 112, 66), "test position");
-	 if (GUI.Button(new Rect(100, 210, 112, 66), "", blankStyle)){
+	 if (GUI.Button(new Rect(100, 210, 112, 66), "")){
 	 	Application.LoadLevel("main");
 	 	
 	 	}

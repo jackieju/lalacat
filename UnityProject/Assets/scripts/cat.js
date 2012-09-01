@@ -262,6 +262,9 @@ function remove(){
 	yield WaitForSeconds(0.6);
 	CentralController.inst.explode(gameObject.transform.position, gameObject.transform.rotation);
 	CentralController.inst.UnspawnBall(gameObject);
+	CentralController.inst.score += 1;
+	Debug.Log("score "+ CentralController.inst.score);
+	CentralController.inst.score_text.text = ""+CentralController.inst.score;
 	// pull down above
 	for (var j=mi_y+1; j< 10; j++){
 		var c:Cat = Cat.matrix[mi_x,j];
