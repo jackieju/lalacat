@@ -1,20 +1,46 @@
 public var bgTexture:Texture;
 public var catTexture:Texture;
 public var menu:GameObject;
+public var logo_cat:GameObject;
 var index = 1;
 var d = 0;
 var starttime = 0;
 var mc:Camera;
+public var pf_explorsion:GameObject;
+public var pf_feather:GameObject; // animation of cat fur emitting, made by particle systems
 public var btTexture:Texture;
+function explode(pos:Vector3 , rot:Quaternion ){
+	GameObject.Instantiate(pf_explorsion, pos, rot);
+}	
+
+function splashFur(pos:Vector3 , rot:Quaternion ){
+	GameObject.Instantiate(pf_feather, pos, rot);
+}	
 function Start(){
 	index = 0;
 	d = 0;
 	starttime= Time.time;
-//	menu.renderer.transform.position.x = -6f;
+	
+	// move the logo cat
 	yield WaitForSeconds(1);
 	//menu.renderer.transform.position.x = -6f;
+	while (logo_cat.renderer.transform.position.y > 11f){
+		logo_cat.renderer.transform.position.y -= 1.1f;
+		yield;
+	}
+//explode(logo_cat.transform.position, logo_cat.transform.rotation);
+	logo_cat.renderer.transform.position.y= 11f;
+splashFur(logo_cat.transform.position, logo_cat.transform.rotation);
+		yield WaitForSeconds(1.5);
+	//menu.renderer.transform.position.x = 0.5f;
+//	yield;
+	menu.renderer.transform.position.x = -1.1f;
+	// move menu 
+//	menu.renderer.transform.position.x = -6f;
+
+	//menu.renderer.transform.position.x = -6f;
 	while (menu.renderer.transform.position.x <-1.1f){
-		menu.renderer.transform.position.x += 1.5f;
+		menu.renderer.transform.position.x += 1.2f;
 		yield;
 	}
 	//menu.renderer.transform.position.x = 0.5f;
@@ -40,10 +66,9 @@ function Start(){
 
 
 function OnGUI(){
-
 	var blankStyle : GUIStyle=new GUIStyle();; // the blank style make button transparent
 	// GUI.Button(new Rect(100, 210, 112, 66), "test position");
-	 if (GUI.Button(new Rect(100, 210, 112, 66), "")){
+		 if (GUI.Button(CentralController.HDRect(100, 210, 112, 66), "", blankStyle)){
 	 	Application.LoadLevel("main");
 	 	
 	 	}

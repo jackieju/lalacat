@@ -1,6 +1,6 @@
 public var textures:Texture[];
 public var progress:int; // 0 to 100
-public var tripLength:float = 8.0f;
+public var tripLength:float = 6.0f;
 private var reset_pos:Vector3;
 function Start(){
 

@@ -1,6 +1,6 @@
 
 //class cat extends MonoBehaviour{
-public static var  speed:float=5;
+public static var  speed:float=30;
 public var status:int; // 0: initial status 1: free drop 2: fixed 3: draging 4: blocked when draging
 public var catType:int;
 public static var matrix:Object[,] = new Object[20,20];
@@ -15,10 +15,56 @@ public var mf_y:float;
 
 public static var aniPlayer: AnimationPlayer;
 
-function start(){
+
+public var ani:Texture[] = new Texture[3];
+
+//var rand_t:float = 10;
+
+function Start(){
 	status = 0; // before drop
+	renderer.material.mainTexture = ani[0];
+		if (ani[1] != null)
+	StartCoroutine("playani");
 }
 
+function playani(){
+
+	while (true){
+		//rand_t = rand_t - Time.deltaTime;
+		//Debug.Log("======>play cat1-"+this.name+" ani, "+rand_t + "-" +Time.deltaTime);
+		//if ( rand_t	< 0){
+							yield WaitForSeconds( Random.Range(5, 20));
+								var index : int;
+	var startTime = 0.0f;
+	var playTime = 0.25f;
+	while(startTime <= playTime)
+	{
+		index = (startTime * ani.Length / playTime +1) % ani.Length;
+		renderer.material.mainTexture = ani[index];
+		startTime = startTime + Time.deltaTime;
+		yield;
+	}
+		/*	if (ani[1] != null)
+				renderer.material.mainTexture = ani[1];
+			yield;
+	
+			if (ani[2] != null)
+				renderer.material.mainTexture = ani[2];
+			yield;
+					
+			renderer.material.mainTexture = ani[0];
+			yield;
+		
+			rand_t = Random.Range(1, 10);
+	
+			//Debug.Log("======>rand_t="+rand_t);*/
+			
+	//	}
+	
+	
+	}
+
+}
 
 function Update () {
 	
@@ -175,12 +221,12 @@ function playAniShake(){
 	//yield;
 	//gameObject.guiTexture.pixelInset.y = 	gameObject.guiTexture.pixelInset.x - 10;
 	while (true){
-	renderer.material.mainTextureOffset= new Vector2(-0.03,0);
-	yield WaitForSeconds(0.03);
-	renderer.material.mainTextureOffset= new Vector2(0.03,0);
-	yield WaitForSeconds(0.03);
-	renderer.material.mainTextureOffset= new Vector2(-0.03,0);
-	yield WaitForSeconds(0.03);
+		renderer.material.mainTextureOffset= new Vector2(-0.03,0);
+		yield WaitForSeconds(0.03);
+		renderer.material.mainTextureOffset= new Vector2(0.03,0);
+		yield WaitForSeconds(0.03);
+		renderer.material.mainTextureOffset= new Vector2(-0.03,0);
+		yield WaitForSeconds(0.03);
 	}
 	Debug.Log("shake");
 }
@@ -194,9 +240,9 @@ function putIntoMatrix(){
 	var y:int = pos.y;
 	//x = transform.position.x+3.5f; // 3: ix start from -3, 0.5: fx start from -0.5
 
-	Debug.Log("pos="+transform.position);	
+	//Debug.Log("pos="+transform.position);	
 	
-	Debug.Log("matrix["+x+"]["+y+"]="+ this.name);	
+	//Debug.Log("matrix["+x+"]["+y+"]="+ this.name);	
 	
 	Cat.matrix[pos.x, pos.y] = this;
 	
@@ -259,11 +305,11 @@ function putIntoMatrix(){
 }
 function remove(){
 	playAniShake();
-	yield WaitForSeconds(0.6);
+	yield WaitForSeconds(0.6*3);
 	CentralController.inst.explode(gameObject.transform.position, gameObject.transform.rotation);
 	CentralController.inst.UnspawnBall(gameObject);
 	CentralController.inst.score += 1;
-	Debug.Log("score "+ CentralController.inst.score);
+	//Debug.Log("score "+ CentralController.inst.score);
 	CentralController.inst.score_text.text = ""+CentralController.inst.score;
 	// pull down above
 	for (var j=mi_y+1; j< 10; j++){

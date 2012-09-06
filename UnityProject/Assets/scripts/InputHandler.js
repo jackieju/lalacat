@@ -1,11 +1,27 @@
 var moving_cat:Cat=null;
-
-function start(){
-	
+//var st:float = 0;
+function Start(){
+	//StartCoroutine("threadHandleInput");
 }
 function Update () {
 	//Debug.Log("input handler update");
 	handleTouch();
+}
+
+function threadHandleInput(){
+	while (true){
+		//st += Time.deltaTime;
+		//Debug.Log("time ="+st);
+		//if (st>0.1f){
+		
+		//	Debug.Log("===>handle input");
+			
+			handleTouch();
+			
+			//st = 0;
+	//	}
+		yield;
+	}
 }
 
 function handleTouch(){
@@ -13,7 +29,7 @@ function handleTouch(){
  //Debug.Log("handle input");
  for (var i = 0; i < Input.touchCount; ++i) {
 	   var t:Touch = Input.GetTouch(i);
-        if (Input.GetTouch(i).phase == TouchPhase.Began) {
+        if (t.phase == TouchPhase.Began) {
        //    Debug.Log("touche began");
   /*         explode(Input.GetTouch(i).position, Quaternion.identity);
            var touch = Input.GetTouch(i);
@@ -64,7 +80,8 @@ function handleTouch(){
 				//Debug.Log("touche("+tp_w+") move(x="+x+", y="+y+", moving_cat="+moving_cat + ", oldpos="+moving_cat.mf_x+","+moving_cat.mf_y);
      
 					if ((y < 0) || (Cat.matrix[x,y]  != null && Cat.matrix[x,y] != moving_cat)){ // current position occupied by other cat
-						// revert to last position
+							
+							// revert to last position
 						  	moving_cat.transform.position = new Vector3(moving_cat.mf_x, moving_cat.mf_y, 0);
 							Debug.Log("revert tomoldpos="+moving_cat.mf_x+","+moving_cat.mf_y);
 					}else{ 
@@ -84,14 +101,14 @@ function handleTouch(){
 							
 						
 							
-							if ( Cat.matrix[ix2, iy2] != null && Cat.matrix[ix2, iy2] != moving_cat){
+							if (  ix2 >6   || (Cat.matrix[ix2, iy2] != null && Cat.matrix[ix2, iy2] != moving_cat) ){
 								Debug.Log("collide right, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
 								fx2 = moving_cat.mf_x;
 								fy2 = moving_cat.mf_y;
 							}
 							
 							ix2  = tp_w.x+3.0f+0.5f-0.5f;
-							if ( Cat.matrix[ix2, iy2] != null && Cat.matrix[ix2, iy2] != moving_cat){
+							if (ix2 < 0 || (Cat.matrix[ix2, iy2] != null && Cat.matrix[ix2, iy2] != moving_cat)  ){
 								fx2 = moving_cat.mf_x;
 								fy2 = moving_cat.mf_y;
 								Debug.Log("collide left, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
