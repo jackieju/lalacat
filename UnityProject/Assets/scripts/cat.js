@@ -20,6 +20,10 @@ public var ani:Texture[] = new Texture[3];
 
 //var rand_t:float = 10;
 
+public var time_connected:float = 0;
+public var time_offset:float = 0;
+
+
 function Start(){
 	status = 0; // before drop
 	renderer.material.mainTexture = ani[0];
@@ -29,6 +33,14 @@ function Start(){
 
 function playani(){
 
+	for (var i = 0; i< ani.Length; i++) {
+		if (ani[i] == null)
+			break;
+	}
+	if ( i < 2 ) // only one texture
+		return;
+	
+	var playTime = 0.25 + i*0.1f; 
 	while (true){
 		//rand_t = rand_t - Time.deltaTime;
 		//Debug.Log("======>play cat1-"+this.name+" ani, "+rand_t + "-" +Time.deltaTime);
@@ -36,7 +48,7 @@ function playani(){
 							yield WaitForSeconds( Random.Range(5, 20));
 								var index : int;
 	var startTime = 0.0f;
-	var playTime = 0.25f;
+	
 	while(startTime <= playTime)
 	{
 		index = (startTime * ani.Length / playTime +1) % ani.Length;
@@ -68,7 +80,7 @@ function playani(){
 
 function Update () {
 	
-	//Debug.Log("update cat");
+	//Debug.Log("update cat "+ name+", status="+status);
 	//var a = Input.GetAxisRaw("Vertical");
 
 	if (status  == 1){
@@ -107,6 +119,7 @@ function Update () {
 			putIntoMatrix();
 		}
 		else{ // free drop
+			//Debug.Log("free drop "+Vector3.down*distance);
 			transform.Translate(Vector3.down*distance);
 	
 			mf_x = transform.position.x;
@@ -266,15 +279,25 @@ function putIntoMatrix(){
 	if (ary_found	.length>=3){
 		var affected_col = new Array();
 		Debug.Log("found "+ary_found.Count + " connected");
+		var t = 0; 
 		for (var i =0; i< ary_found.length; i++){
 			
 			// eleminate it
 			//	ary_found[i].destroy();
 			var o:Cat = ary_found[i];
-			o.remove();
-		
-			o.status = 0;
-			Cat.matrix[o.mi_x, o.mi_y] = null;
+			
+			if (o.time_connected == 0){
+				o.time_connected = Time.realtimeSinceStartup;
+				if (t != 0){
+				
+					o.time_offset = o.time_connected -t;
+				}
+				o.remove();
+			}else{
+				t = o.time_connected;
+			}
+			
+	
 			
 //			// pull down above cat
 //			for (var j=o.mi_y+1; j< 10; j++){
@@ -304,10 +327,19 @@ function putIntoMatrix(){
 
 }
 function remove(){
+
+	
+	// show ani
 	playAniShake();
-	yield WaitForSeconds(0.6*3);
+	yield WaitForSeconds(0.6*3-time_offset);
 	CentralController.inst.explode(gameObject.transform.position, gameObject.transform.rotation);
+	
+	// do destroy
 	CentralController.inst.UnspawnBall(gameObject);
+	status = 0;
+	Cat.matrix[mi_x, mi_y] = null;
+			
+	// update score
 	CentralController.inst.score += 1;
 	//Debug.Log("score "+ CentralController.inst.score);
 	CentralController.inst.score_text.text = ""+CentralController.inst.score;

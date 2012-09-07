@@ -75,6 +75,7 @@ function Awake(){
 	//Debug.Log("cc awake");
 	HDRatioH = Screen.height/480.0f;
 	HDRatioW = Screen.width/320.0f;
+	t_scale = Time.timeScale;
  //	m_timerManager = gameObject.AddComponent("TimerManager");
  	//m_timerManager1.initTimer(1, 11, new Rect(100, 100, 100, 100), gameObject, mySkin.customStyles[0]); 
 
@@ -82,7 +83,7 @@ function Awake(){
 	// to pre-instantiate. That way it won't have to do any array reallocations behind the scenes if
 	// we grow.
 	inst = this;
-	texts = new Texture[8,3];
+	texts = new Texture[8,8];
 	//var a = Resources.Load("cat3");
 	//Debug.Log("resource:"+a+"//");
 //	texts[0] =  Resources.Load("cat3");
@@ -146,6 +147,10 @@ function Awake(){
 	texts[6,2] = Resources.Load("c72");
 	texts[7,2] = Resources.Load("c72");
 	
+	texts[5,3] =  Resources.Load("c63");
+	texts[5,4] =  Resources.Load("c64");
+	texts[5,5] =  Resources.Load("c65");
+	
 //	Debug.Log("t1:"+texts[0]+",t2:"+texts[1]);
 	ballPool = GameObjectPool(ballPrefab, numberOfBallsToPreInstantiate*2, InitializeGameObject, false);
 	ballPool.PrePopulate(numberOfBallsToPreInstantiate);
@@ -167,6 +172,9 @@ function Awake(){
 	
 	StartCoroutine("onTimer");
 	//InvokeRepeating("handleTouch", 0, 0.2);
+	
+	
+
 }
 
 function onTimer(){
@@ -191,20 +199,44 @@ function onTimer(){
 	}
 
 //	water.renderer.material.color.a = 0.1f;
+	// create first cat row
+	var i = 0;
+
+	if (PlayerPrefs.GetString("firtrun", "") == ""){
+		onHelp();
+	 	PlayerPrefs.SetString("firstrun", "1"); 
+	}
+		
+		
 	
+	while (status != 0){
+		yield WaitForSeconds(1);
+	}
+	  
 	playani_level();
+	CreateCatRow();
+	yield WaitForSeconds(1); // give chance to cat to run Start(), in which the status will be set to 0
+	for ( i = 0; i< catrow_size; i++){
+		top_row[i].status = 1;
+		top_row[i] = null;
+	}
+
+
+	CreateCatRow();
+	//Debug.Log("time scale "+ Time.timeScale + ", status " + status);
 
 	
-	CreateCatRow();
 	var gameover = true;
 //	while (current_wave_catrow_number < current_wave_catrow_count){
 	while (true){
 		yield WaitForSeconds (interval);
 		gameover = true;
 		if (top_row != null && top_row.length==catrow_size){
-			for (var i = 0; i< catrow_size; i++){
-				if (top_row[i] != null && Cat.matrix[i,catcol_size-1] == null){
+			for ( i = 0; i< catrow_size; i++){
+				if (top_row[i] != null && Cat.matrix[i,catcol_size-1] == null){ //  the 9th position is empty
 			//		top_row[i].transform.position = new Vector3(i-3, catcol_size-1, catrow_size-i);
+					
+					// releaae the cat in top row
 					top_row[i].status = 1;
 					top_row[i] = null;
 					gameover = false;
@@ -213,9 +245,9 @@ function onTimer(){
 		}
 		if (!gameover){
 			CreateCatRow();
-			fish.playAni(10);
+			fish.playAni(10); // show progress
 			current_wave_catrow_number++;
-			if (current_wave_catrow_number >= 10){
+			if (current_wave_catrow_number >= 10){ // next level
 				current_wave_catrow_number = 0;
 				current_wave += 1;
 				//Cat.speed += 2;
@@ -260,7 +292,7 @@ function playani_level(){
 			}
 			yield WaitForSeconds(0.1f);
 		}
-		yield WaitForSeconds(3);
+		yield WaitForSeconds(2);
 		level_fish.transform.position.y = 15;
 }
 
@@ -272,8 +304,11 @@ function CreateCatRow(){
 			top_row[i] = createCat(spawnPoint);
 		}
 	}
-	
 }
+
+
+
+
 // Tells each ball who we are.
 function InitializeGameObject(target : GameObject){
 	target.SendMessage ("SetCentralController", this, SendMessageOptions.DontRequireReceiver);
@@ -419,7 +454,7 @@ function OnGUI(){
 		if (GUI.Button(HDRect(60, 360, 70, 55), "")){
 			onReplay();
 		}
-		if (GUI.Button(HDRect(165, 360, 70, 55), "")){
+		if (GUI.Button(HDRect(170, 360, 70, 55), "")){
 			onQuit();	
 		}
 
