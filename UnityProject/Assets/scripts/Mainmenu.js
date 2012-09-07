@@ -21,7 +21,7 @@ function Start(){
 	d = 0;
 	starttime= Time.time;
 	
-	// move the logo cat
+	// show up the logo cat
 	yield WaitForSeconds(1);
 	//menu.renderer.transform.position.x = -6f;
 	while (logo_cat.renderer.transform.position.y > 11f){
@@ -31,7 +31,9 @@ function Start(){
 //explode(logo_cat.transform.position, logo_cat.transform.rotation);
 	logo_cat.renderer.transform.position.y= 11f;
 splashFur(logo_cat.transform.position, logo_cat.transform.rotation);
-		yield WaitForSeconds(1.5);
+
+		//yield WaitForSeconds(1.5);
+		
 	//menu.renderer.transform.position.x = 0.5f;
 //	yield;
 	menu.renderer.transform.position.x = -1.1f;
