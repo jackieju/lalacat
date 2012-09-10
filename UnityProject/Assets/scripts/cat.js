@@ -26,6 +26,7 @@ public var time_offset:float = 0;
 
 function Start(){
 	status = 0; // before drop
+	time_connected = time_offset = 0;
 	renderer.material.mainTexture = ani[0];
 		if (ani[1] != null)
 	StartCoroutine("playani");
@@ -92,7 +93,7 @@ function Update () {
 		 
 		//Debug.Log("updat cat "+name+" distance="+distance+ ", position="+transform.position+ ",ix="+ix+", iy="+iy);
 		if (iy <= 0 ){// hit floor
-			Debug.Log("hit floor while free dropping");
+//			Debug.Log("hit floor while free dropping");
 	        iy = 0;
 		
 			if (Cat.matrix	[ix,iy] != this){
@@ -107,7 +108,7 @@ function Update () {
 		}else
 		
 		if (Cat.matrix	[ix,iy] != null){ // hit cat
-			Debug.Log("this cat "+ this+" hit cat "+ix+","+iy+":"+Cat.matrix	[ix,iy]);
+//			Debug.Log("this cat "+ this+" hit cat "+ix+","+iy+":"+Cat.matrix	[ix,iy]);
 			if (Cat.matrix	[ix,iy] != this){
 				while (Cat.matrix	[ix,iy] != null && iy < 9)
 					iy += 1;
@@ -279,21 +280,24 @@ function putIntoMatrix(){
 	if (ary_found	.length>=3){
 		var affected_col = new Array();
 		Debug.Log("found "+ary_found.Count + " connected");
-		var t = 0; 
+		var t:float = 0; 
 		for (var i =0; i< ary_found.length; i++){
 			
 			// eleminate it
 			//	ary_found[i].destroy();
 			var o:Cat = ary_found[i];
-			
+//			Debug.Log("cat "+ o.name+"["+o.mi_x+","+o.mi_y+"],time "+ o.time_connected+", t "+t+", now "+Time.time);	
 			if (o.time_connected == 0){
-				o.time_connected = Time.realtimeSinceStartup;
-				if (t != 0){
 				
+				o.time_connected = Time.time;
+				if (t != 0){
+					
 					o.time_offset = o.time_connected -t;
 				}
+//				Debug.Log("time_offset="+o.time_offset+", time_connected="+o.time_connected);
 				o.remove();
 			}else{
+//				Debug.Log("t=o.time_connected= "+ o.time_connected);
 				t = o.time_connected;
 			}
 			
@@ -330,15 +334,18 @@ function remove(){
 
 	
 	// show ani
+//	var wt = 0.6*10-time_offset-(Time.time - time_connected);
+//	Debug.Log("time offset " + time_offset+", wait time " + wt);
 	playAniShake();
-	yield WaitForSeconds(0.6*3-time_offset);
+	yield WaitForSeconds(0.6*2-time_offset-(Time.time - time_connected));
 	CentralController.inst.explode(gameObject.transform.position, gameObject.transform.rotation);
 	
 	// do destroy
-	CentralController.inst.UnspawnBall(gameObject);
 	status = 0;
 	Cat.matrix[mi_x, mi_y] = null;
-			
+	CentralController.inst.UnspawnBall(gameObject);
+
+
 	// update score
 	CentralController.inst.score += 1;
 	//Debug.Log("score "+ CentralController.inst.score);

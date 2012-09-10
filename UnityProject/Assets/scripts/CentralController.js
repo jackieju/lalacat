@@ -209,16 +209,17 @@ function onTimer(){
 //	}
 //		
 	try{
-		var data:SaveDeck = SaveNLoad.Load("usersetttings1");}
+		var data:SaveDeck = SaveNLoad.Load(Application.persistentDataPath+"/usersettings");}
 	catch (ae){
 		data = new SaveDeck();
 	}
+
 	Debug.Log("user data:"+ data.intValue1);
-	if (data.intValue1 != 1){
+	if (data == null || data.intValue1 != 1){
 	onHelp();
 		var localData = new SaveDeck();
 		localData.intValue1 = 1;
-		SaveNLoad.Save("usersetttings1", localData);
+		SaveNLoad.Save(Application.persistentDataPath+"/usersettings", localData);
 	}
 	
 
@@ -642,7 +643,8 @@ function createCat(spawnPoint:Vector3){
 	c.status = 0;
 	c.mf_x = spawnPoint.x;
 	c.mf_y = spawnPoint.y;
-	
+	c.time_connected = 0;
+	c.time_offset = 0;
 	
 	Debug.Log("create cat at "+ spawnPoint);
 	return c;
