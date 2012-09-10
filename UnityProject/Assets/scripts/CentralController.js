@@ -645,6 +645,7 @@ function createCat(spawnPoint:Vector3){
 	c.mf_y = spawnPoint.y;
 	c.time_connected = 0;
 	c.time_offset = 0;
+	c. firstDropHit = true;
 	
 	Debug.Log("create cat at "+ spawnPoint);
 	return c;
@@ -702,6 +703,10 @@ function explode(pos:Vector3 , rot:Quaternion ){
 	GameObject.Instantiate(pf_explorsion, pos, rot);
 }	
 
-function splashFur(pos:Vector3 , rot:Quaternion ){
-	GameObject.Instantiate(pf_feather, pos, rot);
+function splashFur(pos:Vector3 , rot:Quaternion, play_audio ){
+	var i:GameObject = GameObject.Instantiate(pf_feather, pos, rot);
+	if (!play_audio){
+		var c:CatFurAudio = i.GetComponent("CatFurAudio");
+		c.playAudio();
+	}
 }	

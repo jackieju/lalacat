@@ -23,6 +23,7 @@ public var ani:Texture[] = new Texture[3];
 public var time_connected:float = 0;
 public var time_offset:float = 0;
 
+public var firstDropHit = true;
 
 function Start(){
 	status = 0; // before drop
@@ -271,7 +272,8 @@ function putIntoMatrix(){
 	// set position.z
 	transform.position.z = (7-pos.x)*1.0f + 0.1f*pos.y;
 	
-	CentralController.inst.splashFur(gameObject.transform.position, gameObject.transform.rotation);
+	CentralController.inst.splashFur(gameObject.transform.position, gameObject.transform.rotation, !firstDropHit);
+	firstDropHit = false;
 	
 	// check explorion
 	//if (Cat.matrix[x+1]

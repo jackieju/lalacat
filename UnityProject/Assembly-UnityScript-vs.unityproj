@@ -49,6 +49,7 @@
      <Compile Include="Assets\scripts\BtQuit.js" />
      <Compile Include="Assets\scripts\BtReplay.js" />
      <Compile Include="Assets\scripts\Cat.js" />
+     <Compile Include="Assets\scripts\CatFurAudio.js" />
      <Compile Include="Assets\scripts\CentralController.js" />
      <Compile Include="Assets\scripts\DontGoThoughThings.js" />
      <Compile Include="Assets\scripts\DrawLine.js" />
