@@ -202,12 +202,33 @@ function onTimer(){
 	// create first cat row
 	var i = 0;
 
-	if (PlayerPrefs.GetString("firtrun", "") == ""){
-		onHelp();
-	 	PlayerPrefs.SetString("firstrun", "1"); 
+//
+//	if (PlayerPrefs.GetString("firtrun", "") == ""){
+//		onHelp();
+//	 	PlayerPrefs.SetString("firstrun", "1"); 
+//	}
+//		
+	try{
+		var data:SaveDeck = SaveNLoad.Load("usersetttings1");}
+	catch (ae){
+		data = new SaveDeck();
 	}
-		
-		
+	Debug.Log("user data:"+ data.intValue1);
+	if (data.intValue1 != 1){
+	onHelp();
+		var localData = new SaveDeck();
+		localData.intValue1 = 1;
+		SaveNLoad.Save("usersetttings1", localData);
+	}
+	
+
+
+//	localData.boolValue1 = dead;
+//
+//	localData.stringValue1 = name;
+//
+//	localData.stringArray1 = array;
+
 	
 	while (status != 0){
 		yield WaitForSeconds(1);
