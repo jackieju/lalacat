@@ -5,7 +5,8 @@ private var reset_pos:Vector3;
 function Start(){
 
 	reset_pos = gameObject.transform.position;
-	Debug.Log("reset_pos "+reset_pos);
+//	Debug.Log("reset_pos "+reset_pos);
+	tripLength = 6;
 }
 function Update () {
 }

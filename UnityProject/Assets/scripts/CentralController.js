@@ -1,5 +1,5 @@
 #pragma strict
-
+import System.IO; 
 // The ball prefab that will be used to create balls on demand.
 var ballPrefab : GameObject;
 // The number of balls that will be created but deactivated up front.
@@ -63,6 +63,10 @@ public var game_over_bt_quit: GUITexture;
 public var helpboard:GameObject;
 public var mask:GameObject;
 
+// for deubg
+public var debug_msg = "";
+
+
 
 function CentralContrller(){
 Debug.Log("cc construct");
@@ -83,7 +87,7 @@ function Awake(){
 	// to pre-instantiate. That way it won't have to do any array reallocations behind the scenes if
 	// we grow.
 	inst = this;
-	texts = new Texture[8,8];
+	texts = new Texture[10,8];
 	//var a = Resources.Load("cat3");
 	//Debug.Log("resource:"+a+"//");
 //	texts[0] =  Resources.Load("cat3");
@@ -127,7 +131,9 @@ function Awake(){
 	texts[4,0] = Resources.Load("c50");
 	texts[5,0] = Resources.Load("c60");
 	texts[6,0] = Resources.Load("c70");
-	texts[7,0] = Resources.Load("c70");
+	texts[7,0] = Resources.Load("c80");
+	texts[8,0] = Resources.Load("c90");
+	texts[9,0] = Resources.Load("c100");
 	
 	texts[0,1] =  Resources.Load("c11");
 	texts[1,1] =  Resources.Load("c21");
@@ -136,7 +142,7 @@ function Awake(){
 	texts[4,1] =  Resources.Load("c51");
 	texts[5,1] =  Resources.Load("c61");
 	texts[6,1] =  Resources.Load("c71");
-	texts[7,1] =  Resources.Load("c71");
+	//texts[7,1] =  Resources.Load("c71");
 	       
 	texts[0,2] = Resources.Load("c12");
 	texts[1,2] = Resources.Load("c22");
@@ -145,7 +151,7 @@ function Awake(){
 	texts[4,2] = Resources.Load("c52");
 	texts[5,2] = Resources.Load("c62");
 	texts[6,2] = Resources.Load("c72");
-	texts[7,2] = Resources.Load("c72");
+	//texts[7,2] = Resources.Load("c72");
 	
 	texts[5,3] =  Resources.Load("c63");
 	texts[5,4] =  Resources.Load("c64");
@@ -175,6 +181,66 @@ function Awake(){
 	
 	
 
+}
+
+function getPath(){
+	return Application.persistentDataPath+"/";
+ 	var path="";
+  if(Application.platform==RuntimePlatform.IPhonePlayer) {
+   	path= Application.dataPath.Substring (0, Application.dataPath.Length - 5);
+    path = path.Substring(0, path.LastIndexOf('/'))+"/Documents/"; 
+   }
+   else {
+      path=Application.dataPath+"/Resource/GameData/"; 
+      }
+   return path; 
+   
+}
+
+function  LoadDataFromFile(txtName) {
+var ret = "";
+ var path=getPath()+txtName; 
+ if(File.Exists(path)) {
+/*  	var fs =new FileStream(path,FileMode.Open); 
+	var sr:StreamReader =new StreamReader(fs); 
+  	FileData = JsonMapper.ToObject(sr.ReadToEnd());
+  	 sr.Close();
+    fs.Close();*/
+    var sr =  new File.OpenText(path);
+var    input = ""; 
+ 
+		  while (true) { 
+		 
+		    input = sr.ReadLine(); 
+		 
+		    if (input == null) { break; } 
+		 
+		 //   Debug.Log("line="+input); 
+		 	ret += input;
+		  } 
+		 
+		  sr.Close(); 
+	}
+    else {
+  	 //    Debug.Log("No json "); 
+     }  	      
+     return ret; 
+}
+function WriteDataToFile( txtName:String, content:String) { 
+	var path=getPath()+txtName;
+ /*	//FileStream fs;
+ 	 if(!File.Exists(path)) { 
+ 		 fs=new FileStream(path,FileMode.Create); 
+ 	 } else { 
+ 	 	fs=new FileStream(path,FileMode.Truncate);
+ 	 }
+ //	 StreamWriter sw=new StreamWriter(fs); 
+ 	// sw.Write(content); sw.Close(); fs.Close();*/
+ 	 
+  var fileWriter = File.CreateText(path); 
+  fileWriter.Write(content, content.Length);
+ 
+  fileWriter.Close(); 
 }
 
 function onTimer(){
@@ -208,18 +274,30 @@ function onTimer(){
 //	 	PlayerPrefs.SetString("firstrun", "1"); 
 //	}
 //		
+	debug_msg = getPath()+"usersettings";
+	var data = "";
 	try{
-		var data:SaveDeck = SaveNLoad.Load(Application.persistentDataPath+"/usersettings");}
+//		var data:SaveDeck = SaveNLoad.Load(Application.persistentDataPath+"/usersettings");
+//		var data:SaveDeck = SaveNLoad.Load(getPath()+"usersettings");
+		data = LoadDataFromFile("usersettings");
+	}
 	catch (ae){
-		data = new SaveDeck();
+	debug_msg += ae;
+	//	data = null;
 	}
 
-	Debug.Log("user data:"+ data.intValue1);
-	if (data == null || data.intValue1 != 1){
-	onHelp();
-		var localData = new SaveDeck();
-		localData.intValue1 = 1;
-		SaveNLoad.Save(Application.persistentDataPath+"/usersettings", localData);
+//	Debug.Log("user data:"+ data.intValue1);
+	if (data == null || data == ""){
+		onHelp();
+//		var localData = new SaveDeck();
+//		localData.intValue1 = 1;
+		try{
+//		SaveNLoad.Save(Application.persistentDataPath+"/usersettings", localData);
+//		SaveNLoad.Save(getPath()+"usersettings", localData);
+		WriteDataToFile("usersettings", "1");
+		}catch(ae){
+		debug_msg += ae;
+		}
 	}
 	
 
@@ -230,7 +308,16 @@ function onTimer(){
 //
 //	localData.stringArray1 = array;
 
-	
+	var ret_cat = CreateCatRowAtPos(5);
+//	yield WaitForSeconds(0.1f); // give chance to cat to run Start(), in which the status will be set to 0
+//	for ( i = 0; i< catrow_size; i++){
+//		ret_cat[i].setStatus(1);
+//	}
+	ret_cat =CreateCatRowAtPos(3);
+//	yield WaitForSeconds(1); // give chance to cat to run Start(), in which the status will be set to 0
+//	for ( i = 0; i< catrow_size; i++){
+//		ret_cat[i].setStatus(0.1f);
+//	}
 	while (status != 0){
 		yield WaitForSeconds(1);
 	}
@@ -239,7 +326,7 @@ function onTimer(){
 	CreateCatRow();
 	yield WaitForSeconds(1); // give chance to cat to run Start(), in which the status will be set to 0
 	for ( i = 0; i< catrow_size; i++){
-		top_row[i].status = 1;
+		top_row[i].setStatus(1);
 		top_row[i] = null;
 	}
 
@@ -259,7 +346,7 @@ function onTimer(){
 			//		top_row[i].transform.position = new Vector3(i-3, catcol_size-1, catrow_size-i);
 					
 					// releaae the cat in top row
-					top_row[i].status = 1;
+					top_row[i].setStatus(1);
 					top_row[i] = null;
 					gameover = false;
 				}
@@ -304,8 +391,8 @@ function playani_level(){
 	//var li:TextMesh = GameObject.Find("levelinfo");
 	var level_number = current_wave + 1;
 //	Debug.Log("level "+ level_number);
-	level_info.renderer.material.color=Color.red;
-	level_info.text = "Level "+ level_number;
+	level_info.renderer.material.color= new Color(0.9f, 0.3f, 0.3f, 1.0f);
+	level_info.text = "      "+ level_number;
 		while (true){
 			level_fish.transform.position.y -= 2;
 			if (level_fish.transform	.position	.y	 <=5.5f){
@@ -316,6 +403,18 @@ function playani_level(){
 		}
 		yield WaitForSeconds(2);
 		level_fish.transform.position.y = 15;
+}
+
+function CreateCatRowAtPos(y:int){
+	var ret = new Cat[catrow_size];
+	for (var i = 0; i < catrow_size; i++){
+			var spawnPoint = Vector3(i-3, y, 1+catrow_size-i);
+	 		var cat = createCat(spawnPoint);
+	 		cat.setStatus(1);
+	 		ret[i] = cat;
+		
+	}
+	return ret;
 }
 
 function CreateCatRow(){
@@ -357,6 +456,7 @@ function OnGUI(){
 
 	GUI.depth = 0;
 	var bMask = false;
+//		GUI.Label (Rect (0,0,Screen.width,Screen.height), debug_msg);
 	/*for (var l = -3; l < -3; l++)
 		Debug.DrawLine (new Vector3(l,0,-5), new Vector3 (l, 10, -5), Color.red);
 	for ( l = 0; l < 10; l++)
@@ -391,7 +491,7 @@ function OnGUI(){
 	  MakeStroke(HDRect(15, 448, 100, 20), "Level ", color, pcolor, 1);  
 	  
 	 color = Color (1.0, 1.0, 0.7, 1); // text color 
-	 MakeStroke(HDRect(15, 468, 100, 30), ""+ (current_wave+1), color, pcolor, 1); 
+	 MakeStroke(HDRect(55, 448, 100, 30), ""+ (current_wave+1), color, pcolor, 1); 
 	
 	
 	color = Color (0.7, 0.7, 0.1, 1); // text color	
@@ -440,11 +540,11 @@ function OnGUI(){
 		game_over_bt_replay.active = true;
 		game_over_bt_quit.active = true;
 		
-		game_over_bt_replay.transform.localScale.x = 0.05;
+		game_over_bt_replay.transform.localScale.x = 0.08;
 		game_over_bt_replay.transform.localScale.y = 0.05;
 		game_over_bt_replay.transform.localScale.z = 0.05;
 		
-		game_over_bt_quit.transform.localScale.x = 0.05;
+		game_over_bt_quit.transform.localScale.x = 0.08;
 		game_over_bt_quit.transform.localScale.y = 0.05;
 		game_over_bt_quit.transform.localScale.z = 0.05;
 		
@@ -473,10 +573,10 @@ function OnGUI(){
 
 		GUI.skin.label.font  = f;
 
-		if (GUI.Button(HDRect(60, 360, 70, 55), "")){
+		if (GUI.Button(HDRect(60, 360, 70, 55), "", blankStyle)){
 			onReplay();
 		}
-		if (GUI.Button(HDRect(170, 360, 70, 55), "")){
+		if (GUI.Button(HDRect(170, 360, 70, 55), "", blankStyle)){
 			onQuit();	
 		}
 
@@ -629,7 +729,22 @@ function createCat(spawnPoint:Vector3){
 	var c:Cat = o.GetComponent("Cat");
 	
 	// put texture
-	var i =Random.Range(0, 8);
+	var i = 0;
+	var l = 6;
+	
+	if (current_wave > 8){
+		l = 10;
+	}else
+	if ( current_wave > 5){
+		l = 9;
+	}else if (current_wave > 2){
+		l = 8;
+	}
+	
+	l =10;
+
+	i = Random.Range(0, l);
+	
 	var t:Texture =  texts[i,0];
 	if (t == null)
 		t = mt;
@@ -640,7 +755,7 @@ function createCat(spawnPoint:Vector3){
 //	var s:cat= target.GetComponent("Cat");
 	c.catType = i;
 	
-	c.status = 0;
+	c.setStatus(0);
 	c.mf_x = spawnPoint.x;
 	c.mf_y = spawnPoint.y;
 	c.time_connected = 0;
@@ -658,7 +773,7 @@ function SpawnBall(){
 	var spawnPoint = Vector3(ix, top, 0.0);
 	
 	var c:Cat = createCat(spawnPoint);
-	c.status = 1;
+//	c.setStatus(1);
 	
 }
 
@@ -705,7 +820,8 @@ function explode(pos:Vector3 , rot:Quaternion ){
 
 function splashFur(pos:Vector3 , rot:Quaternion, play_audio ){
 	var i:GameObject = GameObject.Instantiate(pf_feather, pos, rot);
-	if (!play_audio){
+	if (play_audio && Random.Range(0, 10) > 5){
+		
 		var c:CatFurAudio = i.GetComponent("CatFurAudio");
 		c.playAudio();
 	}

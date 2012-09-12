@@ -1,7 +1,7 @@
 
 //class cat extends MonoBehaviour{
 public static var  speed:float=30;
-public var status:int; // 0: initial status 1: free drop 2: fixed 3: draging 4: blocked when draging
+private var status:int; // 0: initial status 1: free drop 2: fixed 3: draging 4: blocked when draging
 public var catType:int;
 public static var matrix:Object[,] = new Object[20,20];
 
@@ -25,8 +25,11 @@ public var time_offset:float = 0;
 
 public var firstDropHit = true;
 
+function setStatus(s:int){
+	status = s;
+}
 function Start(){
-	status = 0; // before drop
+//	status = 0; // before drop
 	time_connected = time_offset = 0;
 	renderer.material.mainTexture = ani[0];
 		if (ani[1] != null)
@@ -90,8 +93,9 @@ function Update () {
 		
 		
 		var iy:int = transform.position.y - distance -0.5f - 0.5f; // 0.5f: half size, 0.5f: floor is 0.5
-		var ix:int = transform.position.x + 3.0f + 0.5f;  // 0.5: ix start from -0.5
-		 
+		var ix:int = transform.position.x + 3.0f + 0.5f;  // 0.5: pos of ix range from n-0.5 to n+0.5
+		 if (ix > 6)
+		  	ix = 6;
 		//Debug.Log("updat cat "+name+" distance="+distance+ ", position="+transform.position+ ",ix="+ix+", iy="+iy);
 		if (iy <= 0 ){// hit floor
 //			Debug.Log("hit floor while free dropping");
