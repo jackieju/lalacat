@@ -313,12 +313,14 @@ function onTimer(){
 
 	var ret_cat = CreateCatRowAtPos(5);
 	current_wave_catrow_number++;
+	fish.playAni(10);
 //	yield WaitForSeconds(0.1f); // give chance to cat to run Start(), in which the status will be set to 0
 //	for ( i = 0; i< catrow_size; i++){
 //		ret_cat[i].setStatus(1);
 //	}
 	ret_cat =CreateCatRowAtPos(3);
 	current_wave_catrow_number++;
+	fish.playAni(10);
 //	yield WaitForSeconds(1); // give chance to cat to run Start(), in which the status will be set to 0
 //	for ( i = 0; i< catrow_size; i++){
 //		ret_cat[i].setStatus(0.1f);
@@ -330,6 +332,7 @@ function onTimer(){
 	playani_level();
 	CreateCatRow();
 	current_wave_catrow_number++;
+	fish.playAni(10);
 	yield WaitForSeconds(1); // give chance to cat to run Start(), in which the status will be set to 0
 	for ( i = 0; i< catrow_size; i++){
 		top_row[i].setStatus(1);
@@ -339,6 +342,7 @@ function onTimer(){
 
 	CreateCatRow();
 	current_wave_catrow_number++;
+	fish.playAni(10);
 	//Debug.Log("time scale "+ Time.timeScale + ", status " + status);
 
 	

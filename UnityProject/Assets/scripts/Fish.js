@@ -14,7 +14,11 @@ function Update () {
 function reset(){
 	gameObject.transform.position = reset_pos;
 }
-function playAni(progress:int){
+
+// play progress animation
+// progress:int -> added percentage of progress
+function playAni(progress:int)
+{ 
 	
 	//var step:float = progress*tripLength /(100.0f*textures.Length);
 	for (var i = 0; i< textures.Length; i++){
