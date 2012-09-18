@@ -312,11 +312,13 @@ function onTimer(){
 //	localData.stringArray1 = array;
 
 	var ret_cat = CreateCatRowAtPos(5);
+	current_wave_catrow_number++;
 //	yield WaitForSeconds(0.1f); // give chance to cat to run Start(), in which the status will be set to 0
 //	for ( i = 0; i< catrow_size; i++){
 //		ret_cat[i].setStatus(1);
 //	}
 	ret_cat =CreateCatRowAtPos(3);
+	current_wave_catrow_number++;
 //	yield WaitForSeconds(1); // give chance to cat to run Start(), in which the status will be set to 0
 //	for ( i = 0; i< catrow_size; i++){
 //		ret_cat[i].setStatus(0.1f);
@@ -327,6 +329,7 @@ function onTimer(){
 	  
 	playani_level();
 	CreateCatRow();
+	current_wave_catrow_number++;
 	yield WaitForSeconds(1); // give chance to cat to run Start(), in which the status will be set to 0
 	for ( i = 0; i< catrow_size; i++){
 		top_row[i].setStatus(1);
@@ -335,6 +338,7 @@ function onTimer(){
 
 
 	CreateCatRow();
+	current_wave_catrow_number++;
 	//Debug.Log("time scale "+ Time.timeScale + ", status " + status);
 
 	
@@ -365,8 +369,9 @@ function onTimer(){
 				current_wave_catrow_number = 0;
 				current_wave += 1;
 				//Cat.speed += 2;
-				if (interval > 5)
-					interval -= interval/8;
+//				if (interval > 5)
+//					interval -= interval/8.0f;
+				interval = 5.0f;
 				
 				StartCoroutine("playani_level");
 				fish.reset();
@@ -399,7 +404,12 @@ function playani_level(){
 	var level_number = current_wave + 1;
 //	Debug.Log("level "+ level_number);
 	level_info.renderer.material.color= new Color(0.9f, 0.3f, 0.3f, 1.0f);
-	level_info.text = "      "+ level_number;
+
+	if (level_number < 10)
+		level_info.text = "         "+ level_number;
+	else
+		level_info.text = "        "+ level_number;
+//	level_info.text = "        49";
 		while (true){
 			level_fish.transform.position.y -= 2;
 			if (level_fish.transform	.position	.y	 <=5.5f){
@@ -509,7 +519,7 @@ function OnGUI(){
 	//GUI.Label(HDRect(275, 445, 100, 20), ""+score);
 	GUI.skin.label.alignment = TextAnchor.UpperRight;
 	 color = Color (1.0, 1.0, 0.7, 1); // text color
-	MakeStroke(HDRect(270, 442, 30, 30),  ""+score, color, pcolor, 1); 
+	MakeStroke(HDRect(260, 442, 50, 30),  ""+score, color, pcolor, 1); 
 	
 	GUI.skin.label.alignment = TextAnchor.UpperLeft;
 	
