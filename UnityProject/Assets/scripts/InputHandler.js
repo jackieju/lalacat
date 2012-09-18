@@ -2,17 +2,49 @@ var moving_cat:Cat=null;
 var hasTouched = false;
 var mCamera:Camera;
 var lastPos:Vector2 = Vector2.zero;
+var v:float;
+	var t1:float = 0;
+	var count = 0;
+	var t2:float;
 //var st:float = 0;
 function Start(){
-	StartCoroutine("threadHandleInput");
-	mCamera = Camera.main;
+mCamera = Camera.main;
+	//StartCoroutine("threadHandleInput");
+	
 }
 function Update () {
 	//Debug.Log("input handler update");
-	//handleTouch();
+	if (CentralController.status == 0)
+			handleTouch2();
+//	count +=1;
+//		t1 += Time.deltaTime;
+//		if (t1 > 2){
+//			v = count/2;
+//			count =0;
+//			t1=0;
+//		}
 }
-
+//function OnGUI(){
+//	GUI.Label (Rect (0,0,Screen.width,Screen.height), "handle speed:"+v);
+//}
+function OnPreCull(){
+//Debug.Log("onPreCull");
+	if (CentralController.status == 0)
+	handleTouch2();
+//		count +=1;
+//		t1 += Time.time-t2;
+//		t2 = Time.time;
+//		if (t1 > 2){
+//			v = count/2.0f;
+//			count =0;
+//			t1=0;
+//		}
+}
+function OnPreRender(){
+//Debug.Log("OnPreRender");
+}
 function threadHandleInput(){
+	
 	while (true){
 		//st += Time.deltaTime;
 		//Debug.Log("time ="+st);
@@ -24,6 +56,14 @@ function threadHandleInput(){
 			
 			//st = 0;
 	//	}
+		count +=1;
+		t1 += Time.time-t2;
+		t2 = Time.time;
+		if (t1 > 2){
+			v = count/2;
+			count =0;
+			t1=0;
+		}
 		yield;
 	}
 }
@@ -393,7 +433,10 @@ function catchCat(tp_w:Vector3){
 	
 	var x:int = _p.x;	 
 	var y:int = _p.y;
-	if ((x -1 < 0 || Cat.matrix[x-1, y] != null) && (x+1>CentralController.catrow_size ||  Cat.matrix[x+1,y] != null) && ( y<1 || Cat.matrix[x, y-1] != null) && (y>CentralController.catcol_size || Cat.matrix[x, y+1] != null) ){
+	if ( (x -1 < 0 || Cat.matrix[x-1, y] != null) 
+		&& (x+1>CentralController.catrow_size ||  Cat.matrix[x+1,y] != null)
+		 && ( y<1 || Cat.matrix[x, y-1] != null) 
+		 && (y>CentralController.catcol_size || Cat.matrix[x, y+1] != null) ){
 					
 	}else{
 		if (Cat.matrix[x,y] != null){

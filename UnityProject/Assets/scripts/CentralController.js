@@ -17,7 +17,7 @@ var moving_cat:Cat;
 //var drag_cat_speed:float = 0.1f;
 var texts: Texture[,];
 static var inst:CentralController;
-var interval:float = 15.0f;
+private var interval:float = 10.0f;
 public static var catrow_size = 7; // 7 cat one line
 public static var catcol_size = 9; // 9 cat one col
 
@@ -131,9 +131,12 @@ function Awake(){
 	texts[4,0] = Resources.Load("c50");
 	texts[5,0] = Resources.Load("c60");
 	texts[6,0] = Resources.Load("c70");
-	texts[7,0] = Resources.Load("c80");
-	texts[8,0] = Resources.Load("c90");
-	texts[9,0] = Resources.Load("c100");
+//	texts[7,0] = Resources.Load("c80");
+//	texts[8,0] = Resources.Load("c90");
+//	texts[9,0] = Resources.Load("c100");
+	texts[7,0] = Resources.Load("cb0");
+	texts[8,0] = Resources.Load("cc0");
+	texts[9,0] = Resources.Load("cd0");
 	
 	texts[0,1] =  Resources.Load("c11");
 	texts[1,1] =  Resources.Load("c21");
@@ -346,12 +349,14 @@ function onTimer(){
 			//		top_row[i].transform.position = new Vector3(i-3, catcol_size-1, catrow_size-i);
 					
 					// releaae the cat in top row
-					top_row[i].setStatus(1);
+					top_row[i].ShakeAndDrop();
+		
 					top_row[i] = null;
 					gameover = false;
 				}
 			}
 		}
+		yield WaitForSeconds(2);
 		if (!gameover){
 			CreateCatRow();
 			fish.playAni(10); // show progress
@@ -360,7 +365,9 @@ function onTimer(){
 				current_wave_catrow_number = 0;
 				current_wave += 1;
 				//Cat.speed += 2;
-				interval -= interval/5;
+				if (interval > 5)
+					interval -= interval/8;
+				
 				StartCoroutine("playani_level");
 				fish.reset();
 			}
@@ -541,11 +548,11 @@ function OnGUI(){
 		game_over_bt_quit.active = true;
 		
 		game_over_bt_replay.transform.localScale.x = 0.08;
-		game_over_bt_replay.transform.localScale.y = 0.05;
+		game_over_bt_replay.transform.localScale.y = 0.045;
 		game_over_bt_replay.transform.localScale.z = 0.05;
 		
 		game_over_bt_quit.transform.localScale.x = 0.08;
-		game_over_bt_quit.transform.localScale.y = 0.05;
+		game_over_bt_quit.transform.localScale.y = 0.045;
 		game_over_bt_quit.transform.localScale.z = 0.05;
 		
 		//GUI.skin.font = font;
@@ -730,7 +737,7 @@ function createCat(spawnPoint:Vector3){
 	
 	// put texture
 	var i = 0;
-	var l = 6;
+	var l = 7;
 	
 	if (current_wave > 8){
 		l = 10;
@@ -741,7 +748,7 @@ function createCat(spawnPoint:Vector3){
 		l = 8;
 	}
 	
-	l =10;
+//	l =10;
 
 	i = Random.Range(0, l);
 	

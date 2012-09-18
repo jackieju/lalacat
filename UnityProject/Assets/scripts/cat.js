@@ -1,6 +1,6 @@
 
 //class cat extends MonoBehaviour{
-public static var  speed:float=30;
+public static var  speed:float=50; // distance = speed * Time.deltaTime;
 private var status:int; // 0: initial status 1: free drop 2: fixed 3: draging 4: blocked when draging
 public var catType:int;
 public static var matrix:Object[,] = new Object[20,20];
@@ -229,10 +229,18 @@ function playAni(index){
 	
 	Cat.aniPlayer.playOnce(this, catType, index);
 }
+function ShakeAndDrop(){
+	yield playAniShake(1);
+	
 
-function playAniShake(){
+	status = 1;
+
+}
+
+function playAniShake(span:float){
 	//Cat.aniPlayer.shake(this);
 	
+	var t:float = 0;
 	
 	//gameObject.guiTexture.pixelInset.y = 	gameObject.guiTexture.pixelInset.x - 10;
 	//yield;
@@ -241,13 +249,22 @@ function playAniShake(){
 	//gameObject.guiTexture.pixelInset.y = 	gameObject.guiTexture.pixelInset.x - 10;
 	while (true){
 		renderer.material.mainTextureOffset= new Vector2(-0.03,0);
-		yield WaitForSeconds(0.03);
+		yield WaitForSeconds(0.01);
+		t += Time.deltaTime;
 		renderer.material.mainTextureOffset= new Vector2(0.03,0);
-		yield WaitForSeconds(0.03);
+		yield WaitForSeconds(0.01);
+			t += Time.deltaTime;
 		renderer.material.mainTextureOffset= new Vector2(-0.03,0);
-		yield WaitForSeconds(0.03);
+		yield WaitForSeconds(0.01);
+			t += Time.deltaTime;
+		if (span >0){
+		
+			if (t > span){
+				break;
+			}
+		}
 	}
-	Debug.Log("shake");
+//	Debug.Log("shake");
 }
 
 function putIntoMatrix(){
@@ -342,7 +359,7 @@ function remove(){
 	// show ani
 //	var wt = 0.6*10-time_offset-(Time.time - time_connected);
 //	Debug.Log("time offset " + time_offset+", wait time " + wt);
-	playAniShake();
+	playAniShake(0);
 	yield WaitForSeconds(0.6*2-time_offset-(Time.time - time_connected));
 	CentralController.inst.explode(gameObject.transform.position, gameObject.transform.rotation);
 	
