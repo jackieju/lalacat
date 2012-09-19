@@ -66,7 +66,7 @@ public var mask:GameObject;
 // for deubg
 public var debug_msg = "";
 
-
+public var texts_bomber:Texture[];
 
 function CentralContrller(){
 Debug.Log("cc construct");
@@ -87,7 +87,7 @@ function Awake(){
 	// to pre-instantiate. That way it won't have to do any array reallocations behind the scenes if
 	// we grow.
 	inst = this;
-	texts = new Texture[10,8];
+	texts = new Texture[20,8];
 	//var a = Resources.Load("cat3");
 	//Debug.Log("resource:"+a+"//");
 //	texts[0] =  Resources.Load("cat3");
@@ -137,6 +137,10 @@ function Awake(){
 	texts[7,0] = Resources.Load("cb0");
 	texts[8,0] = Resources.Load("cc0");
 	texts[9,0] = Resources.Load("cd0");
+	
+	// above 9 is used by items
+//	texts[10,0] = Resources.Load("c80");
+	texts[10,0] = Resources.Load("bomber00");
 	
 	texts[0,1] =  Resources.Load("c11");
 	texts[1,1] =  Resources.Load("c21");
@@ -430,7 +434,7 @@ function CreateCatRowAtPos(y:int){
 	var ret = new Cat[catrow_size];
 	for (var i = 0; i < catrow_size; i++){
 			var spawnPoint = Vector3(i-3, y, 1+catrow_size-i);
-	 		var cat = createCat(spawnPoint);
+	 		var cat = createRandomCat(spawnPoint);
 	 		cat.setStatus(1);
 	 		ret[i] = cat;
 		
@@ -443,7 +447,7 @@ function CreateCatRow(){
 	for (var i = 0; i < catrow_size; i++){
 		if (top_row[i] == null){
 			var spawnPoint = Vector3(i-3, 10.5, 1+catrow_size-i);
-			top_row[i] = createCat(spawnPoint);
+			top_row[i] = createRandomCat(spawnPoint);
 		}
 	}
 }
@@ -743,29 +747,36 @@ function hidePauseMenu(){
 	}
 }*/
 
-
-function createCat(spawnPoint:Vector3){
-// Place a ball there and activate it
-	var o:GameObject = ballPool.Spawn(spawnPoint, Quaternion.identity);
-	var c:Cat = o.GetComponent("Cat");
-	
-	// put texture
+function createRandomCat(spawnPoint:Vector3){
+	// selet cat type
 	var i = 0;
-	var l = 7;
+	var l = 6;
 	
-	if (current_wave > 8){
+	if (current_wave > 9){
 		l = 10;
 	}else
-	if ( current_wave > 5){
+	if (current_wave > 8){
 		l = 9;
-	}else if (current_wave > 2){
+	}else
+	if ( current_wave > 5){
 		l = 8;
+	}else if (current_wave > 2){
+		l = 7;
 	}
 	
 //	l =10;
 
 	i = Random.Range(0, l);
+	return createCat(i, spawnPoint);
+}
+function createCat(type:int, spawnPoint:Vector3){
 	
+	
+	var i = type;
+	
+	// Place a ball there and activate it
+	var o:GameObject = ballPool.Spawn(spawnPoint, Quaternion.identity);
+	var c:Cat = o.GetComponent("Cat");
 	var t:Texture =  texts[i,0];
 	if (t == null)
 		t = mt;
@@ -793,7 +804,7 @@ function SpawnBall(){
 	var ix:int = x;
 	var spawnPoint = Vector3(ix, top, 0.0);
 	
-	var c:Cat = createCat(spawnPoint);
+	var c:Cat = createRandomCat(spawnPoint);
 //	c.setStatus(1);
 	
 }
@@ -804,39 +815,26 @@ function UnspawnBall(ball : GameObject){
 	ballPool.Unspawn(ball);
 }
 
-function update(){
-Debug.Log("update1");
-   for (var i = 0; i < Input.touchCount; ++i) {
-        if (Input.GetTouch(i).phase == TouchPhase.Began) {
-           Debug.Log("touched1");
-        }
-    }
-    
-    /* for ( i = 0; i < Input.touchCount; ++i) {
-
-        if (Input.GetTouch(i).phase == TouchPhase.Began) {
-
-            // Construct a ray from the current touch coordinates
-
-            var ray = Camera.main.ScreenPointToRay(Input.GetTouch(i).position);
-
-        Debug.Log (ray);
-
-            if (Physics.Raycast(ray)) {
-
-                // Create a particle if hit
-explode(transform.position, transform.rotation);
-              //  Instantiate(explore, transform.position, transform.rotation);
-
-            }
-
-        }                                          
-
-    }*/
+function explodeBlack(pos:Vector3, rot:Quaternion){
+	var i:GameObject = GameObject.Instantiate(pf_explorsion, pos, rot);
+	
+	var particleAnimator : ParticleAnimator = i.GetComponent(ParticleAnimator);
+	 var modifiedColors : Color[] = particleAnimator.colorAnimation;
+	 modifiedColors[0] = Color.black;
+	 modifiedColors[1] = Color.black;
+    modifiedColors[2] = Color.black;
+    	particleAnimator.colorAnimation = modifiedColors;
+    i.particleEmitter.renderer.material.color= Color.red;
+    i.particleEmitter.Emit();
 }
 
 function explode(pos:Vector3 , rot:Quaternion ){
-	GameObject.Instantiate(pf_explorsion, pos, rot);
+	var i:GameObject = GameObject.Instantiate(pf_explorsion, pos, rot);
+	
+
+    i.particleEmitter.Emit();
+
+
 }	
 
 function splashFur(pos:Vector3 , rot:Quaternion, play_audio ){

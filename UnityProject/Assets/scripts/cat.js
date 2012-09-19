@@ -9,7 +9,7 @@ public static var matrix:Object[,] = new Object[20,20];
 public var mi_x:int;
 public var mi_y:int;
 
-// standarized position
+// standarized real position
 public var mf_x:float;
 public var mf_y:float;
 
@@ -32,8 +32,8 @@ function Start(){
 //	status = 0; // before drop
 	time_connected = time_offset = 0;
 	renderer.material.mainTexture = ani[0];
-		if (ani[1] != null)
-	StartCoroutine("playani");
+	if (ani[1] != null)
+		StartCoroutine("playani");
 }
 
 function playani(){
@@ -144,6 +144,18 @@ function Update () {
 function playAnimationOnce(index){
 	aniPlayer.playOnce(this, catType, index);
 }
+function playAniOnce(texts:Texture[], playTime:float){
+	var index : int;
+	var startTime = 0.0f;
+	while(startTime <= playTime)
+	{
+		index = (startTime * (texts.Length / playTime) ) % texts.Length;
+		gameObject.renderer.material.mainTexture = texts[index];
+		startTime = startTime + Time.deltaTime;
+		yield;
+	}
+}
+
 /*
 function OnCollisionEnter(obj:Collision)
 {
@@ -237,6 +249,10 @@ function ShakeAndDrop(){
 
 }
 
+function shakeAndExplode(span:float){
+	playAniShake(span);
+	explode();
+}
 function playAniShake(span:float){
 	//Cat.aniPlayer.shake(this);
 	
@@ -292,66 +308,121 @@ function putIntoMatrix(){
 	
 	// set position.z
 	transform.position.z = (7-pos.x)*1.0f + 0.1f*pos.y;
+	if (catType < 10){
 	
-	CentralController.inst.splashFur(gameObject.transform.position, gameObject.transform.rotation, !firstDropHit);
-	firstDropHit = false;
-	
-	// check explorion
-	//if (Cat.matrix[x+1]
-	var ary_found = new Array();
-	findSame(ary_found, pos.x, pos.y);
-	if (ary_found	.length>=3){
-		var affected_col = new Array();
-		Debug.Log("found "+ary_found.Count + " connected");
-		var t:float = 0; 
-		for (var i =0; i< ary_found.length; i++){
-			
-			// eleminate it
-			//	ary_found[i].destroy();
-			var o:Cat = ary_found[i];
-//			Debug.Log("cat "+ o.name+"["+o.mi_x+","+o.mi_y+"],time "+ o.time_connected+", t "+t+", now "+Time.time);	
-			if (o.time_connected == 0){
+		CentralController.inst.splashFur(gameObject.transform.position, gameObject.transform.rotation, !firstDropHit);
+		firstDropHit = false;
+		
+		// check explorion
+		//if (Cat.matrix[x+1]
+		var ary_found = new Array();
+		findSame(ary_found, pos.x, pos.y);
+		if (ary_found	.length>=3){
+	//		var affected_col = new Array();
+	//		Debug.Log("found "+ary_found.Count + " connected");
+			var t:float = 0; 
+			for (var i =0; i< ary_found.length; i++){
 				
-				o.time_connected = Time.time;
-				if (t != 0){
+				// eleminate it
+				//	ary_found[i].destroy();
+				var o:Cat = ary_found[i];
+	//			Debug.Log("cat "+ o.name+"["+o.mi_x+","+o.mi_y+"],time "+ o.time_connected+", t "+t+", now "+Time.time);	
+				if (o.time_connected == 0){
 					
-					o.time_offset = o.time_connected -t;
+					o.time_connected = Time.time;
+					if (t != 0){
+						
+						o.time_offset = o.time_connected -t;
+					}
+	//				Debug.Log("time_offset="+o.time_offset+", time_connected="+o.time_connected);
+					o.shakeAndExplode(3);
+					
+				}else{
+	//				Debug.Log("t=o.time_connected= "+ o.time_connected);
+					t = o.time_connected;
 				}
-//				Debug.Log("time_offset="+o.time_offset+", time_connected="+o.time_connected);
-				o.remove();
-			}else{
-//				Debug.Log("t=o.time_connected= "+ o.time_connected);
-				t = o.time_connected;
+				
+		
+				
+	//			// pull down above cat
+	//			for (var j=o.mi_y+1; j< 10; j++){
+	//				var c:Cat = Cat.matrix[o.mi_x,j];
+	//				if (c != null){
+	//					c.status = 1;
+	//					Cat.matrix[o.mi_x,j]=null;
+	//					c.transform.position = new Vector3( c.transform.position.x, c.transform.position.y+0.5f*j, c.transform.position.z); 
+	//				}
+	//			}
+	//			var j = 0;
+	//			for ( j= 0; j < affected_col.length; j++){
+	//				if (affected_col	[j] == o.mi_x)
+	//					break;
+	//			}
+	//			if (j == affected_col	.length	){
+	//				affected_col.push(o.mi_x);
+	//			}
+			}
+	//		for ( i = 0; i < affected_col.length;i++){
+	//		
+	//			
+	//		
+	//		}
+			if (ary_found.length == 3)  // only the 3rd one trigger the explosion
+				explode();
+			else{
+			
 			}
 			
-	
-			
-//			// pull down above cat
-//			for (var j=o.mi_y+1; j< 10; j++){
-//				var c:Cat = Cat.matrix[o.mi_x,j];
-//				if (c != null){
-//					c.status = 1;
-//					Cat.matrix[o.mi_x,j]=null;
-//					c.transform.position = new Vector3( c.transform.position.x, c.transform.position.y+0.5f*j, c.transform.position.z); 
-//				}
-//			}
-//			var j = 0;
-//			for ( j= 0; j < affected_col.length; j++){
-//				if (affected_col	[j] == o.mi_x)
-//					break;
-//			}
-//			if (j == affected_col	.length	){
-//				affected_col.push(o.mi_x);
-//			}
 		}
-//		for ( i = 0; i < affected_col.length;i++){
-//		
-//			
-//		
-//		}
-		
+	}else{
+		//explodeRow(mi_y);
 	}
 
+}
+function explodeRow(y:int){
+playAniOnce(CentralController.inst.texts_bomber, 1);
+	playAniShake(3);
+	yield WaitForSeconds(0.6*2);
+	for (var i=0;i < CentralController.catrow_size;i++){
+		var c:Cat = Cat.matrix[i, y];
+		if (c != null){
+		Debug.Log("blow  " +i);
+			CentralController.inst.explodeBlack(c.gameObject.transform.position, c.gameObject.transform.rotation);
+			c.removeByBomber();
+		}
+	}
+
+}
+function explode(){
+
+	yield WaitForSeconds(0.6*2-time_offset-(Time.time - time_connected));
+	
+	// rescan and explode
+	var ary_found = new Array();
+	findSame(ary_found, mi_x, mi_y);
+	if (ary_found	.length>=3){
+	var x_sum = 0;
+	var y_sum = 0;
+		for (var i =0; i< ary_found.length; i++){
+			var o:Cat = ary_found[i];
+			x_sum += o.mi_x;
+			y_sum += o.mi_y;
+			CentralController.inst.explode(o.gameObject.transform.position, o.gameObject.transform.rotation);
+			o.remove();
+		}
+		if (ary_found	.length	 > 3){
+			var x = x_sum / ary_found.length;
+			var y = y_sum /ary_found.length;
+			var c:Cat = CentralController.inst.createCat(10, new Vector3(x-3, y+1, 1+CentralController.catrow_size-x));
+			c.setStatus(1);
+		}
+	}
+	
+}
+
+function removeByBomber(){
+	remove();
+	blowAbove(0.5f);
 }
 function remove(){
 
@@ -359,9 +430,8 @@ function remove(){
 	// show ani
 //	var wt = 0.6*10-time_offset-(Time.time - time_connected);
 //	Debug.Log("time offset " + time_offset+", wait time " + wt);
-	playAniShake(0);
-	yield WaitForSeconds(0.6*2-time_offset-(Time.time - time_connected));
-	CentralController.inst.explode(gameObject.transform.position, gameObject.transform.rotation);
+//	playAniShake(0);
+
 	
 	// do destroy
 	status = 0;
@@ -374,12 +444,17 @@ function remove(){
 	//Debug.Log("score "+ CentralController.inst.score);
 	CentralController.inst.score_text.text = ""+CentralController.inst.score;
 	// pull down above
+	blowAbove(0);
+	
+}
+
+function blowAbove(height:float){
 	for (var j=mi_y+1; j< 10; j++){
 		var c:Cat = Cat.matrix[mi_x,j];
 		if (c != null){
 			c.status = 1;
 			Cat.matrix[mi_x,j]=null;
-			c.transform.position = new Vector3( c.transform.position.x, c.transform.position.y+0.5f*j, c.transform.position.z); 
+			c.transform.position = new Vector3( c.transform.position.x, c.transform.position.y+0.5f*j+height, c.transform.position.z); 
 		}
 	}
 }
@@ -395,6 +470,8 @@ function addCatToAry(ary:Array, c:Cat){
 }
 function findSame(ary_found, x:int, y:int){
 	var self:Cat = Cat.matrix[x,y];
+	if (self == null)
+		return;
 	var up:Cat = null;
 	var down:Cat = null;
 	var left:Cat = null;

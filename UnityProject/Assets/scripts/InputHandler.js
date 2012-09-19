@@ -78,7 +78,7 @@ function handleTouch2(){
 //        yourObject = Instantiate(someObjectPrefab, lastPos, Quaternion.Identity)
 	    var tp_w1:Vector3 = mCamera.ScreenToWorldPoint(t.position);
 		if (moving_cat == null)
-	         	catchCat(tp_w1);
+	         catchCat(tp_w1);
 		if (moving_cat !=null)
 			moving_cat.Update();
     }
@@ -433,6 +433,17 @@ function catchCat(tp_w:Vector3){
 	
 	var x:int = _p.x;	 
 	var y:int = _p.y;
+	var c:Cat = Cat.matrix[x,y];
+	if (c != null) {
+		if (c.catType == 10){ // bomber
+			c.explodeRow(c.mi_y);
+			return;
+		}
+	
+	}else 
+		return;
+		
+	
 	if ( (x -1 < 0 || Cat.matrix[x-1, y] != null) 
 		&& (x+1>CentralController.catrow_size ||  Cat.matrix[x+1,y] != null)
 		 && ( y<1 || Cat.matrix[x, y-1] != null) 
@@ -441,10 +452,13 @@ function catchCat(tp_w:Vector3){
 	}else{
 		if (Cat.matrix[x,y] != null){
 			
-			moving_cat = Cat.matrix[x,y];
-			Debug.Log("moving cat = " + moving_cat.name +", "+x+", "+y);
+		
+		
+			moving_cat = c;
+//			Debug.Log("moving cat = " + moving_cat.name +", "+x+", "+y);
 		//	Cat.matrix[x,y] = null;
 			moving_cat.setStatus(3);
+			
 		
 			
 		}
