@@ -1,14 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/InputHandler.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/CentralController.js">
     <Files>
-      <File FileName="Assets/scripts/InputHandler.js" Line="32" Column="13" />
+      <File FileName="Assets/scripts/Cat.js" Line="398" Column="18" />
+      <File FileName="Assets/scripts/InputHandler.js" Line="462" Column="3" />
       <File FileName="Assets/scripts/CatFurAudio.js" Line="1" Column="1" />
-      <File FileName="Assets/scripts/Cat.js" Line="217" Column="24" />
-      <File FileName="Assets/scripts/CentralController.js" Line="464" Column="5" />
+      <File FileName="Assets/scripts/CentralController.js" Line="770" Column="17" />
       <File FileName="Assets/scripts/OnTouchDown.js" Line="21" Column="58" />
       <File FileName="Assets/scripts/centralcontroller.js" Line="317" Column="1" />
-      <File FileName="Assets/scripts/Fish.js" Line="24" Column="45" />
+      <File FileName="Assets/scripts/Fish.js" Line="19" Column="48" />
       <File FileName="Assets/scripts/AniPlayer.js" Line="89" Column="1" />
       <File FileName="Assets/scripts/Mainmenu.js" Line="39" Column="45" />
       <File FileName="Assets/scripts/GameObjectPool.js" Line="88" Column="69" />
@@ -20,7 +20,7 @@
       <File FileName="Assets/Plugins/SaveNLoad.cs" Line="94" Column="21" />
       <File FileName="Assets/Plugins/SaveData.cs" Line="35" Column="14" />
       <File FileName="Assets/scripts/StartBoard.js" Line="24" Column="2" />
-      <File FileName="Assets/scripts/AnimationPlayer.js" Line="1" Column="1" />
+      <File FileName="Assets/scripts/AnimationPlayer.js" Line="16" Column="17" />
       <File FileName="Assets/scripts/BtReplay.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>

@@ -566,11 +566,11 @@ function OnGUI(){
 		game_over_bt_quit.active = true;
 		
 		game_over_bt_replay.transform.localScale.x = 0.08;
-		game_over_bt_replay.transform.localScale.y = 0.045;
+		game_over_bt_replay.transform.localScale.y = 0.034;
 		game_over_bt_replay.transform.localScale.z = 0.05;
 		
 		game_over_bt_quit.transform.localScale.x = 0.08;
-		game_over_bt_quit.transform.localScale.y = 0.045;
+		game_over_bt_quit.transform.localScale.y = 0.034;
 		game_over_bt_quit.transform.localScale.z = 0.05;
 		
 		//GUI.skin.font = font;
