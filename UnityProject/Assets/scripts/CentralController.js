@@ -535,12 +535,13 @@ function OnGUI(){
 		 
 	var blankStyle = new GUIStyle();
 	if (status == 0) {// playing
-	/*	if (GUI.Button (HDRect (0, 105, 30, 25), "", blankStyle)) {
-			t_scale = Time.timeScale;
-			Time.timeScale = 0;
-			status = 1; // paused
-			StartCoroutine("showPauseMenu");
-		}*/
+		if (GUI.Button (HDRect (0, 90, 30, 30), "", blankStyle)) {
+//			t_scale = Time.timeScale;
+//			Time.timeScale = 0;
+//			status = 1; // paused
+//			StartCoroutine("showPauseMenu");
+			pause();
+		}
 	
 			//GUI.skin.label.fontSize = 0;
 	}else if (status == 1){ // paused
@@ -667,9 +668,10 @@ function onHelp(){
 function onResume(){
 	Time.timeScale = t_scale;
 	
-	status = 0; 
+
 	//StartCoroutine("hidePauseMenu");
 	yield hidePauseMenu();
+	status = 0; 
 }
 
 function onReplay(){
@@ -677,10 +679,10 @@ function onReplay(){
 	
 	Time.timeScale = t_scale;
 	
-	status = 0; 
+
 	//StartCoroutine("hidePauseMenu");
 	yield hidePauseMenu();
-
+	status = 0; 
 	Debug.Log("load  level 1");
  
 	Application.LoadLevel(1);
@@ -689,10 +691,10 @@ function onQuit(){
 	
 	Time.timeScale = t_scale;
 	
-	status = 0; 
+
 	//StartCoroutine("hidePauseMenu");
 	yield hidePauseMenu();
-
+	status = 0; 
 	Debug.Log("load  level 1");
  
 	Application.LoadLevel(0);

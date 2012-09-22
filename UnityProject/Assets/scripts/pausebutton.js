@@ -47,11 +47,11 @@ OnTouchUp();
 function OnTouchDown(){
 
 //Debug.Log("mouse down");
-	gameObject.renderer.material.mainTexture = texture_down;
-		CentralController.inst.pause();
+//	gameObject.renderer.material.mainTexture = texture_down;
+//		CentralController.inst.pause();
 }
 function OnTouchUp(){
-	gameObject.renderer.material.mainTexture = texture_up;
+	//gameObject.renderer.material.mainTexture = texture_up;
 
 }
 

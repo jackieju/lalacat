@@ -405,8 +405,8 @@ function explode(){
 	var ary_found = new Array();
 	findSame(ary_found, mi_x, mi_y);
 	if (ary_found	.length>=3){
-	var x_sum = 0;
-	var y_sum = 0;
+		var x_sum = 0;
+		var y_sum = 0;
 		for (var i =0; i< ary_found.length; i++){
 			var o:Cat = ary_found[i];
 			x_sum += o.mi_x;
@@ -420,7 +420,11 @@ function explode(){
 			var c:Cat = CentralController.inst.createCat(10, new Vector3(x-3, y+1, 1+CentralController.catrow_size-x));
 			c.setStatus(1);
 		}
+	}else{
+		time_connected = 0;
+		time_offset = 0;
 	}
+	
 	
 }
 
