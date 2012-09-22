@@ -46,6 +46,9 @@ function playani(){
 		return;
 	
 	var playTime = 0.25 + i*0.1f; 
+	if (i > 3){
+		playTime = 0.25 + i*0.25f;
+	}
 	while (true){
 		//rand_t = rand_t - Time.deltaTime;
 		//Debug.Log("======>play cat1-"+this.name+" ani, "+rand_t + "-" +Time.deltaTime);
@@ -395,7 +398,8 @@ playAniOnce(CentralController.inst.texts_bomber, 1);
 }
 function explode(){
 
-	yield WaitForSeconds(0.6*2-time_offset-(Time.time - time_connected));
+	//yield WaitForSeconds(0.6*2-time_offset-(Time.time - time_connected));
+	yield WaitForSeconds(0.6*2);
 	
 	// rescan and explode
 	var ary_found = new Array();

@@ -40,6 +40,10 @@ function OnPreCull(){
 //			t1=0;
 //		}
 }
+function OnPostRender(){
+	if (CentralController.status == 0)
+		handleTouch2();
+}
 function OnPreRender(){
 //Debug.Log("OnPreRender");
 }
@@ -128,7 +132,7 @@ function trackTouch(t:Touch){
 				if (moving_cat != null){
 				//Debug.Log("touche("+tp_w+") move(x="+x+", y="+y+", moving_cat="+moving_cat + ", oldpos="+moving_cat.mf_x+","+moving_cat.mf_y);
      
-					if ((y < 0) || (Cat.matrix[x,y]  != null && Cat.matrix[x,y] != moving_cat)){ 
+					if ((y < 0) || (Cat.matrix[x,y]  != null && Cat.matrix[x,y] != moving_cat)) { 
 							// if current position occupied by other cat or lower than floor
 							// revert to last position
 						  	moving_cat.transform.position = new Vector3(moving_cat.mf_x, moving_cat.mf_y, 0);
@@ -151,7 +155,7 @@ function trackTouch(t:Touch){
 						
 							ix2 += 0.5f; // test right
 							if (ix2 > 6){
-								if (Cat.matrix[6, iy2] == null){
+								if (Cat.matrix[6, iy2] == null){ // try the very right 
 									fx2 = 3.0f;
 								}else{
 									fx2 = moving_cat.mf_x;
@@ -159,7 +163,7 @@ function trackTouch(t:Touch){
 								fy2 = moving_cat.mf_y;
 							}else if (Cat.matrix[ix2, iy2] != null && Cat.matrix[ix2, iy2] != moving_cat ){
 								Debug.Log("collide right, fx2 "+ fx2+ " revert to "+ moving_cat.mf_x+","+moving_cat.mf_y);
-								if (ix2> 0 && Cat.matrix[ix2-1, iy2] == null)
+								if (ix2> 0 && Cat.matrix[ix2-1, iy2] == null) // try the one left to the test position
 									fx2 = ix2-1-3;
 								else
 									fx2 = moving_cat.mf_x;
@@ -167,12 +171,12 @@ function trackTouch(t:Touch){
 							}
 							
 							ix2  = tp_w.x+3.0f+0.5f-0.5f; // test left
-							if (ix2 < 0 || (Cat.matrix[ix2, iy2] != null && Cat.matrix[ix2, iy2] != moving_cat)  ){
+							if (ix2 < 0 || (Cat.matrix[ix2, iy2] != null && Cat.matrix[ix2, iy2] != moving_cat && ix2<6) )  {
 								if (ix2 < 0){
 									ix2= -1;
 								}
-								if (Cat.matrix[ix2+1, iy2] == null)
-									fx2 = ix2 +1 -3;
+								if (Cat.matrix[ix2+1, iy2] == null) // try position right to the test position
+									fx2 = ix2 +1 -3;  
 								else
 									fx2 = moving_cat.mf_x;
 								fy2 = moving_cat.mf_y;
@@ -445,7 +449,7 @@ function catchCat(tp_w:Vector3){
 		
 	
 	if ( (x -1 < 0 || Cat.matrix[x-1, y] != null) 
-		&& (x+1>CentralController.catrow_size ||  Cat.matrix[x+1,y] != null)
+		&& (x+1>=CentralController.catrow_size ||  Cat.matrix[x+1,y] != null)
 		 && ( y<1 || Cat.matrix[x, y-1] != null) 
 		 && (y>CentralController.catcol_size || Cat.matrix[x, y+1] != null) ){
 					

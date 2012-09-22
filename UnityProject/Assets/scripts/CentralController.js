@@ -124,45 +124,45 @@ function Awake(){
 //	texts[6,0] = Resources.Load("c71");
 //	texts[7,0] = Resources.Load("c71");
 	
-	texts[0,0] = Resources.Load("c10");
-	texts[1,0] = Resources.Load("c20");
-	texts[2,0] = Resources.Load("c30");
-	texts[3,0] = Resources.Load("c40");
-	texts[4,0] = Resources.Load("c50");
-	texts[5,0] = Resources.Load("c60");
-	texts[6,0] = Resources.Load("c70");
+	texts[0,0] = Resources.Load("c10psd");
+	texts[1,0] = Resources.Load("c20psd");
+	texts[2,0] = Resources.Load("c30psd");
+	texts[3,0] = Resources.Load("c40psd");
+	texts[4,0] = Resources.Load("c50psd");
+	texts[5,0] = Resources.Load("c60psd");
+	texts[6,0] = Resources.Load("c70psd");
 //	texts[7,0] = Resources.Load("c80");
 //	texts[8,0] = Resources.Load("c90");
 //	texts[9,0] = Resources.Load("c100");
-	texts[7,0] = Resources.Load("cb0");
-	texts[8,0] = Resources.Load("cc0");
-	texts[9,0] = Resources.Load("cd0");
+	texts[7,0] = Resources.Load("cb0psd");
+	texts[8,0] = Resources.Load("cc0psd");
+	texts[9,0] = Resources.Load("cd0psd");
 	
 	// above 9 is used by items
 //	texts[10,0] = Resources.Load("c80");
 	texts[10,0] = Resources.Load("bomber00");
 	
-	texts[0,1] =  Resources.Load("c11");
-	texts[1,1] =  Resources.Load("c21");
-	texts[2,1] =  Resources.Load("c31");
-	texts[3,1] =  Resources.Load("c41");
-	texts[4,1] =  Resources.Load("c51");
-	texts[5,1] =  Resources.Load("c61");
-	texts[6,1] =  Resources.Load("c71");
+	texts[0,1] =  Resources.Load("c11psd");
+	texts[1,1] =  Resources.Load("c21psd");
+	texts[2,1] =  Resources.Load("c31psd");
+	texts[3,1] =  Resources.Load("c41psd");
+	texts[4,1] =  Resources.Load("c51psd");
+	texts[5,1] =  Resources.Load("c61psd");
+//	texts[6,1] =  Resources.Load("c71psd");
 	//texts[7,1] =  Resources.Load("c71");
 	       
-	texts[0,2] = Resources.Load("c12");
-	texts[1,2] = Resources.Load("c22");
-	texts[2,2] = Resources.Load("c32");
-	texts[3,2] = Resources.Load("c42");
-	texts[4,2] = Resources.Load("c52");
-	texts[5,2] = Resources.Load("c62");
-	texts[6,2] = Resources.Load("c72");
+	texts[0,2] = Resources.Load("c12psd");
+	texts[1,2] = Resources.Load("c22psd");
+	texts[2,2] = Resources.Load("c32psd");
+	texts[3,2] = Resources.Load("c42psd");
+	texts[4,2] = Resources.Load("c52psd");
+	texts[5,2] = Resources.Load("c62psd");
+//	texts[6,2] = Resources.Load("c72psd");
 	//texts[7,2] = Resources.Load("c72");
 	
-	texts[5,3] =  Resources.Load("c63");
-	texts[5,4] =  Resources.Load("c64");
-	texts[5,5] =  Resources.Load("c65");
+	texts[5,3] =  Resources.Load("c63psd");
+	texts[5,4] =  Resources.Load("c64psd");
+	texts[5,5] =  Resources.Load("c65psd");
 	
 //	Debug.Log("t1:"+texts[0]+",t2:"+texts[1]);
 	ballPool = GameObjectPool(ballPrefab, numberOfBallsToPreInstantiate*2, InitializeGameObject, false);
@@ -776,6 +776,7 @@ function createCat(type:int, spawnPoint:Vector3){
 	
 	// Place a ball there and activate it
 	var o:GameObject = ballPool.Spawn(spawnPoint, Quaternion.identity);
+//	o.transform.Rotate(new Vector3(270, 0, 0));
 	var c:Cat = o.GetComponent("Cat");
 	var t:Texture =  texts[i,0];
 	if (t == null)
