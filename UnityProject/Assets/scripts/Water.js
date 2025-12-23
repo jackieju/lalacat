@@ -7,7 +7,7 @@ function Update () {
 	if (time	> 0.1){
 		offset += 0.1;
 		
-		renderer.material.mainTextureOffset = new Vector2(offset, 0);
+		GetComponent.<Renderer>().material.mainTextureOffset = new Vector2(offset, 0);
 		time = 0;
 //		Debug.Log("offset "+ offset);
 	}

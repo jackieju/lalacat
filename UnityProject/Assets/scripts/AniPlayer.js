@@ -91,7 +91,7 @@ function PlayOnce (aniplayer : ANIPLAYER) {
 	while(aniplayer.startTime <= aniplayer.playTime)
 	{
 		index = (aniplayer.startTime * (aniplayer.aniTexture.Length / aniplayer.playTime) * aniplayer.frequency) % aniplayer.aniTexture.Length;
-		guiTexture.texture = aniplayer.aniTexture[index];
+		GetComponent.<GUITexture>().texture = aniplayer.aniTexture[index];
 		aniplayer.startTime = aniplayer.startTime + Time.deltaTime;
 		yield;
 	}
@@ -106,7 +106,7 @@ function PlayCycle (aniplayer : ANIPLAYER) {
 		while(aniplayer.startTime <= aniplayer.playTime)
 		{
 			index = (aniplayer.startTime * (aniplayer.aniTexture.Length / aniplayer.playTime) * aniplayer.frequency) % aniplayer.aniTexture.Length;
-			guiTexture.texture = aniplayer.aniTexture[index];
+			GetComponent.<GUITexture>().texture = aniplayer.aniTexture[index];
 			aniplayer.startTime = aniplayer.startTime + Time.deltaTime;
 			yield;
 		}
@@ -117,11 +117,11 @@ function PlayCycle (aniplayer : ANIPLAYER) {
 
 function FadeIn (aniplayer : ANIPLAYER) {
 	aniplayer.startTime = 0.0f;
-	guiTexture.color.a = 0;
+	GetComponent.<GUITexture>().color.a = 0;
 	while(aniplayer.startTime <= aniplayer.playTime)
 	{
 		aniplayer.startTime = aniplayer.startTime + Time.deltaTime;
-		guiTexture.color.a = guiTexture.color.a + (Time.deltaTime / aniplayer.playTime);
+		GetComponent.<GUITexture>().color.a = GetComponent.<GUITexture>().color.a + (Time.deltaTime / aniplayer.playTime);
 		yield;
 	}
 	yield WaitForSeconds(aniplayer.waitTime);
@@ -132,37 +132,37 @@ function FadeOut (aniplayer : ANIPLAYER) {
 	while(aniplayer.startTime <= aniplayer.playTime)
 	{
 		aniplayer.startTime = aniplayer.startTime + Time.deltaTime;
-		guiTexture.color.a = guiTexture.color.a - (Time.deltaTime / aniplayer.playTime);
+		GetComponent.<GUITexture>().color.a = GetComponent.<GUITexture>().color.a - (Time.deltaTime / aniplayer.playTime);
 		yield;
 	}
 	yield WaitForSeconds(aniplayer.waitTime);
 }
 
 function Magnify (aniplayer : ANIPLAYER) {
-	var scale : float = guiTexture.pixelInset.width / guiTexture.pixelInset.height;
+	var scale : float = GetComponent.<GUITexture>().pixelInset.width / GetComponent.<GUITexture>().pixelInset.height;
 	aniplayer.startTime = 0.0f;
 	while(aniplayer.startTime <= aniplayer.playTime)
 	{
 		aniplayer.startTime = aniplayer.startTime + Time.deltaTime;
-		guiTexture.pixelInset.width = guiTexture.pixelInset.width + Time.deltaTime * aniplayer.offset * scale;
-		guiTexture.pixelInset.height = guiTexture.pixelInset.height + Time.deltaTime * aniplayer.offset;
-		guiTexture.pixelInset.x = guiTexture.pixelInset.x - Time.deltaTime * aniplayer.offset * scale / 2;
-		guiTexture.pixelInset.y = guiTexture.pixelInset.y - Time.deltaTime * aniplayer.offset / 2;
+		GetComponent.<GUITexture>().pixelInset.width = GetComponent.<GUITexture>().pixelInset.width + Time.deltaTime * aniplayer.offset * scale;
+		GetComponent.<GUITexture>().pixelInset.height = GetComponent.<GUITexture>().pixelInset.height + Time.deltaTime * aniplayer.offset;
+		GetComponent.<GUITexture>().pixelInset.x = GetComponent.<GUITexture>().pixelInset.x - Time.deltaTime * aniplayer.offset * scale / 2;
+		GetComponent.<GUITexture>().pixelInset.y = GetComponent.<GUITexture>().pixelInset.y - Time.deltaTime * aniplayer.offset / 2;
 		yield;
 	}
 	yield WaitForSeconds(aniplayer.waitTime);
 }
 
 function Minify (aniplayer : ANIPLAYER) {
-	var scale : float = guiTexture.pixelInset.width / guiTexture.pixelInset.height;
+	var scale : float = GetComponent.<GUITexture>().pixelInset.width / GetComponent.<GUITexture>().pixelInset.height;
 	aniplayer.startTime = 0.0f;
 	while(aniplayer.startTime <= aniplayer.playTime)
 	{
 		aniplayer.startTime = aniplayer.startTime + Time.deltaTime;
-		guiTexture.pixelInset.width = guiTexture.pixelInset.width - Time.deltaTime * aniplayer.offset * scale;
-		guiTexture.pixelInset.height = guiTexture.pixelInset.height - Time.deltaTime * aniplayer.offset;
-		guiTexture.pixelInset.x = guiTexture.pixelInset.x + Time.deltaTime * aniplayer.offset * scale / 2;
-		guiTexture.pixelInset.y = guiTexture.pixelInset.y + Time.deltaTime * aniplayer.offset / 2;
+		GetComponent.<GUITexture>().pixelInset.width = GetComponent.<GUITexture>().pixelInset.width - Time.deltaTime * aniplayer.offset * scale;
+		GetComponent.<GUITexture>().pixelInset.height = GetComponent.<GUITexture>().pixelInset.height - Time.deltaTime * aniplayer.offset;
+		GetComponent.<GUITexture>().pixelInset.x = GetComponent.<GUITexture>().pixelInset.x + Time.deltaTime * aniplayer.offset * scale / 2;
+		GetComponent.<GUITexture>().pixelInset.y = GetComponent.<GUITexture>().pixelInset.y + Time.deltaTime * aniplayer.offset / 2;
 		yield;
 	}
 	yield WaitForSeconds(aniplayer.waitTime);
@@ -173,7 +173,7 @@ function Up (aniplayer : ANIPLAYER) {
 	while(aniplayer.startTime <= aniplayer.playTime)
 	{
 		aniplayer.startTime = aniplayer.startTime + Time.deltaTime;
-		guiTexture.pixelInset.y = guiTexture.pixelInset.y + Time.deltaTime * aniplayer.offset;
+		GetComponent.<GUITexture>().pixelInset.y = GetComponent.<GUITexture>().pixelInset.y + Time.deltaTime * aniplayer.offset;
 		yield;
 	}
 	yield WaitForSeconds(aniplayer.waitTime);
@@ -184,7 +184,7 @@ function Down (aniplayer : ANIPLAYER) {
 	while(aniplayer.startTime <= aniplayer.playTime)
 	{
 		aniplayer.startTime = aniplayer.startTime + Time.deltaTime;
-		guiTexture.pixelInset.y = guiTexture.pixelInset.y - Time.deltaTime * aniplayer.offset;
+		GetComponent.<GUITexture>().pixelInset.y = GetComponent.<GUITexture>().pixelInset.y - Time.deltaTime * aniplayer.offset;
 		yield;
 	}
 	yield WaitForSeconds(aniplayer.waitTime);

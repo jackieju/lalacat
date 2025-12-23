@@ -173,9 +173,9 @@ function Awake(){
 	level_fish.transform.position.y = 15;
 	
 	// init animation
-	Cat.aniPlayer = gameObject.AddComponent("AnimationPlayer");
+	Cat.aniPlayer = gameObject.AddComponent.<AnimationPlayer>();
 	
-	var ani:JAnimation = gameObject.AddComponent("JAnimation");
+	var ani:JAnimation = gameObject.AddComponent.<JAnimation>();
 	ani.addTexture("cat8");
 	ani.addTexture("cat6");
 	ani.addTexture("cat10");
@@ -396,7 +396,8 @@ function onTimer(){
 }
 
 function game_over(){
-	fish.active = false;
+	fish.gameObject.SetActive(false);
+
 	status = 2;
 	while (game_over_screen.transform.position.y > 10.0f){
 		game_over_screen.transform.position.y -= 2;
@@ -411,7 +412,7 @@ function playani_level(){
 	//var li:TextMesh = GameObject.Find("levelinfo");
 	var level_number = current_wave + 1;
 //	Debug.Log("level "+ level_number);
-	level_info.renderer.material.color= new Color(0.9f, 0.3f, 0.3f, 1.0f);
+	level_info.GetComponent.<Renderer>().material.color= new Color(0.9f, 0.3f, 0.3f, 1.0f);
 
 	if (level_number < 10)
 		level_info.text = "         "+ level_number;
@@ -563,8 +564,8 @@ function OnGUI(){
 	}else if (status == 2){ // game just over
 	
 		bMask = true;
-		game_over_bt_replay.active = true;
-		game_over_bt_quit.active = true;
+		game_over_bt_replay.gameObject.SetActive(true);
+		game_over_bt_quit.gameObject.SetActive(true);
 		
 		game_over_bt_replay.transform.localScale.x = 0.08;
 		game_over_bt_replay.transform.localScale.y = 0.034;
@@ -700,23 +701,23 @@ function onQuit(){
 	Application.LoadLevel(0);
 }
 function showPauseMenu(){
-	while (pauseMenu.renderer.transform.position.x <-0.36f){
-		pauseMenu.renderer.transform.position.x += 1.5f;
+	while (pauseMenu.GetComponent.<Renderer>().transform.position.x <-0.36f){
+		pauseMenu.GetComponent.<Renderer>().transform.position.x += 1.5f;
 		yield;
 	}
 
-	pauseMenu.renderer.transform.position.x = -0.36f;
+	pauseMenu.GetComponent.<Renderer>().transform.position.x = -0.36f;
 
 }
 
 function hidePauseMenu(){
 //Debug.Log("hidepausemenu");
-	while (pauseMenu.renderer.transform.position.x > -10.0f){
-		pauseMenu.renderer.transform.position.x -= 1.5f;
+	while (pauseMenu.GetComponent.<Renderer>().transform.position.x > -10.0f){
+		pauseMenu.GetComponent.<Renderer>().transform.position.x -= 1.5f;
 		yield;
 	}
 
-	pauseMenu.renderer.transform.position.x = -10.0f;
+	pauseMenu.GetComponent.<Renderer>().transform.position.x = -10.0f;
 //Debug.Log("leave hidepausemenu");
 }
 
@@ -783,8 +784,8 @@ function createCat(type:int, spawnPoint:Vector3){
 	var t:Texture =  texts[i,0];
 	if (t == null)
 		t = mt;
-	o.renderer.material.mainTexture = t;
-	o.renderer.material.mainTexture.wrapMode =  TextureWrapMode.Clamp;
+	o.GetComponent.<Renderer>().material.mainTexture = t;
+	o.GetComponent.<Renderer>().material.mainTexture.wrapMode =  TextureWrapMode.Clamp;
 	
 	c.ani = [texts[i,0],texts[i,1],texts[i,2]];
 //	var s:cat= target.GetComponent("Cat");
@@ -827,15 +828,15 @@ function explodeBlack(pos:Vector3, rot:Quaternion){
 	 modifiedColors[1] = Color.black;
     modifiedColors[2] = Color.black;
     	particleAnimator.colorAnimation = modifiedColors;
-    i.particleEmitter.renderer.material.color= Color.red;
-    i.particleEmitter.Emit();
+    i.GetComponent.<ParticleEmitter>().GetComponent.<Renderer>().material.color= Color.red;
+    i.GetComponent.<ParticleEmitter>().Emit();
 }
 
 function explode(pos:Vector3 , rot:Quaternion ){
 	var i:GameObject = GameObject.Instantiate(pf_explorsion, pos, rot);
 	
 
-    i.particleEmitter.Emit();
+    i.GetComponent.<ParticleEmitter>().Emit();
 
 
 }	

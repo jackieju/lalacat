@@ -32,7 +32,7 @@ function PlayOnce (cat:Cat) {
 	{
 		index = (startTime * (aniTexture.length / playTime) * frequency) % aniTexture.length;
 		Debug.Log("play frame "+index+",starttime ="+ startTime+ ", deltime="+Time.deltaTime);
-		cat.renderer.material.mainTexture = aniTexture[index];
+		cat.GetComponent.<Renderer>().material.mainTexture = aniTexture[index];
 		startTime = startTime + Time.deltaTime;
 		yield;
 		//yield WaitForSeconds(1);

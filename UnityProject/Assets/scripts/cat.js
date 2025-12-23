@@ -31,7 +31,7 @@ function setStatus(s:int){
 function Start(){
 //	status = 0; // before drop
 	time_connected = time_offset = 0;
-	renderer.material.mainTexture = ani[0];
+	GetComponent.<Renderer>().material.mainTexture = ani[0];
 	if (ani[1] != null)
 		StartCoroutine("playani");
 }
@@ -60,7 +60,7 @@ function playani(){
 	while(startTime <= playTime)
 	{
 		index = (startTime * ani.Length / playTime +1) % ani.Length;
-		renderer.material.mainTexture = ani[index];
+		GetComponent.<Renderer>().material.mainTexture = ani[index];
 		startTime = startTime + Time.deltaTime;
 		yield;
 	}
@@ -153,7 +153,7 @@ function playAniOnce(texts:Texture[], playTime:float){
 	while(startTime <= playTime)
 	{
 		index = (startTime * (texts.Length / playTime) ) % texts.Length;
-		gameObject.renderer.material.mainTexture = texts[index];
+		gameObject.GetComponent.<Renderer>().material.mainTexture = texts[index];
 		startTime = startTime + Time.deltaTime;
 		yield;
 	}
@@ -267,13 +267,13 @@ function playAniShake(span:float){
 	//yield;
 	//gameObject.guiTexture.pixelInset.y = 	gameObject.guiTexture.pixelInset.x - 10;
 	while (true){
-		renderer.material.mainTextureOffset= new Vector2(-0.03,0);
+		GetComponent.<Renderer>().material.mainTextureOffset= new Vector2(-0.03,0);
 		yield WaitForSeconds(0.01);
 		t += Time.deltaTime;
-		renderer.material.mainTextureOffset= new Vector2(0.03,0);
+		GetComponent.<Renderer>().material.mainTextureOffset= new Vector2(0.03,0);
 		yield WaitForSeconds(0.01);
 			t += Time.deltaTime;
-		renderer.material.mainTextureOffset= new Vector2(-0.03,0);
+		GetComponent.<Renderer>().material.mainTextureOffset= new Vector2(-0.03,0);
 		yield WaitForSeconds(0.01);
 			t += Time.deltaTime;
 		if (span >0){

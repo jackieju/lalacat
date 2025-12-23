@@ -24,30 +24,30 @@ function Start(){
 	// show up the logo cat
 	yield WaitForSeconds(1);
 	//menu.renderer.transform.position.x = -6f;
-	while (logo_cat.renderer.transform.position.y > 11f){
-		logo_cat.renderer.transform.position.y -= 1.1f;
+	while (logo_cat.GetComponent.<Renderer>().transform.position.y > 11f){
+		logo_cat.GetComponent.<Renderer>().transform.position.y -= 1.1f;
 		yield;
 	}
 //explode(logo_cat.transform.position, logo_cat.transform.rotation);
-	logo_cat.renderer.transform.position.y= 11f;
+	logo_cat.GetComponent.<Renderer>().transform.position.y= 11f;
 splashFur(logo_cat.transform.position, logo_cat.transform.rotation);
 
 		//yield WaitForSeconds(1.5);
 		
 	//menu.renderer.transform.position.x = 0.5f;
 //	yield;
-	menu.renderer.transform.position.x = -1.1f;
+	menu.GetComponent.<Renderer>().transform.position.x = -1.1f;
 	// move menu 
 //	menu.renderer.transform.position.x = -6f;
 
 	//menu.renderer.transform.position.x = -6f;
-	while (menu.renderer.transform.position.x <-1.1f){
-		menu.renderer.transform.position.x += 1.2f;
+	while (menu.GetComponent.<Renderer>().transform.position.x <-1.1f){
+		menu.GetComponent.<Renderer>().transform.position.x += 1.2f;
 		yield;
 	}
 	//menu.renderer.transform.position.x = 0.5f;
 //	yield;
-	menu.renderer.transform.position.x = -1.1f;
+	menu.GetComponent.<Renderer>().transform.position.x = -1.1f;
 
 }
 /*function Awake(){

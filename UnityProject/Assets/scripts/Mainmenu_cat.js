@@ -53,5 +53,5 @@ function Update () {
 		}
 		spantime = 0;
 	}*/
-	gameObject.renderer.material.mainTextureOffset = new Vector2(offset_x, 0);
+	gameObject.GetComponent.<Renderer>().material.mainTextureOffset = new Vector2(offset_x, 0);
 }

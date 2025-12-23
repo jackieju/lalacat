@@ -9,8 +9,8 @@ function Update () {
 }
 function playAudio(){
 	var i:int = Random.Range(0, src.Length);
-	gameObject.audio.clip = src[i];
-	gameObject.audio.PlayOneShot(gameObject.audio.clip );
+	gameObject.GetComponent.<AudioSource>().clip = src[i];
+	gameObject.GetComponent.<AudioSource>().PlayOneShot(gameObject.GetComponent.<AudioSource>().clip );
 	yield WaitForSeconds(0.5);
-	gameObject.audio.Stop();
+	gameObject.GetComponent.<AudioSource>().Stop();
 }
